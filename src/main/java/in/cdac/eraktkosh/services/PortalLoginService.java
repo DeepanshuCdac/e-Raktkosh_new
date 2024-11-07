@@ -9,14 +9,21 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
 
 //import com.hazelcast.core.HazelcastInstance;
 
@@ -28,180 +35,107 @@ import in.cdac.eraktkosh.utility.SendMessageToUser;
 public class PortalLoginService {
 //	@Autowired
 //    private HazelcastInstance hazelcastInstance;
-	
+
 	@Autowired
 	EraktkoshPortalLoginRepository portalDonorRepository;
 
 	@Autowired
 	HttpSession session;
-	 
-	  
-	long timeDifference = 0;
-	long fiveMinutesInSeconds = 0;
+	@Autowired
+	private HazelcastInstance hazelcastInstance;
+
 	private final String OTP_CHARS = "0123456789";
 	private final int OTP_LENGTH = 6;
-	String flag1 = "0";
-	long previousOtpTimestamp = 0;
-	private static final long OTP_EXPIRY_DURATION = 60 * 1000;
-	private Map<String, String> otpStore = new HashMap<>();
-	private Map<String, String> captchaStore = new HashMap<>();
-	//Map<String, String> otpCache = hazelcastInstance.getMap("otpCache");
-//	Map<String, String> captchaCache = hazelcastInstance.getMap("captchaCache");
-	
-	
+	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000;
 
-		  
+	private Map<String, Integer> otpCountStore = new HashMap<>(); // to store otpCount for each user
+	private Map<String, Long> otpTimestampStore = new HashMap<>();
+
 	public String generateOtp(String mobile_no) throws InvalidKeyException, NoSuchAlgorithmException {
+	    JSONObject finalResponse = new JSONObject();
+	    SecureRandom random = new SecureRandom();
+	    StringBuilder otp = new StringBuilder(OTP_LENGTH);
+	    
+	    // Generate a random 6-digit OTP
+	    for (int i = 0; i < OTP_LENGTH; i++) {
+	        int index = random.nextInt(OTP_CHARS.length());
+	        otp.append(OTP_CHARS.charAt(index));
+	    }
 
-		boolean hasFlag = true;
-		int otpCount = 0;
-		JSONObject finalResponse = new JSONObject();
-		SecureRandom random = new SecureRandom();
-		StringBuilder otp = new StringBuilder(OTP_LENGTH);
-		for (int i = 0; i < OTP_LENGTH; i++) {
-			int index = random.nextInt(OTP_CHARS.length());
-			otp.append(OTP_CHARS.charAt(index));
-		}
+	    String msg = "Your eRaktKosh OTP for username ";
+	    String contactno = "*******" + mobile_no.substring(mobile_no.length() - 3);
+	    msg += contactno + " is: ";
 
-		String msg = "Your eRaktKosh OTP for username ";
+	    try {
+	        // Check if the user exists
+	        boolean userExists = isUserExists(mobile_no);
+	        String userNotExistMessage = "If you are a Registered User you will get an Otp.";
+	        
+	        // If the user does not exist, respond with an appropriate message
+	        if (!userExists) {
+	            finalResponse.put("isUserExists", false);
+	            finalResponse.put("messageSuccess", userNotExistMessage);
+	            return finalResponse.toString();
+	        }
 
-		String contactno = mobile_no.substring(mobile_no.length() - 3);
+	        int otpCount = Otpcount(mobile_no);
+	        long currentTime = System.currentTimeMillis();
+	        Long lastOtpTimestamp = otpTimestampStore.get(mobile_no);
+	        String successMessage = "If you are a Registered User you will get an Otp.";
+	        String errorMessage = "Try After Some time ......!";
 
-		contactno = "*******" + contactno;
+	        // Check if OTP should be generated based on timing and count
+	        if (otpCount == 0 || (lastOtpTimestamp != null && currentTime - lastOtpTimestamp >= OTP_EXPIRATION_TIME)) {
+	            // Update OTP count and timestamp if eligible for a new OTP
+	            otpCount++;
+	            otpCountStore.put(mobile_no, otpCount);
+	            otpTimestampStore.put(mobile_no, currentTime);
 
-		msg += contactno + " is: ";
+	            // Calculate OTP expiration time (current time + 5 minutes)
+	            long otpExpirationTime = currentTime + OTP_EXPIRATION_TIME;
 
-		try {
-			hasFlag = isUserExists(mobile_no);
-			otpCount = Otpcount(mobile_no);
+	            // Send OTP message
+	            SendMessageToUser.SendOTP(msg + otp + ". Please do not share your OTP with anyone.", mobile_no);
 
-			PortalLoginEntity portalLoginVo = new PortalLoginEntity();
-			if (hasFlag == false) {
-				portalLoginVo.setMobileno(mobile_no);
+	            // Store OTP in Hazelcast with expiration
+	            IMap<String, String> otpMap = hazelcastInstance.getMap("otpMap");
+	            otpMap.put(mobile_no, otp.toString(), OTP_EXPIRATION_TIME, TimeUnit.MINUTES);
 
-				portalLoginVo = fetchdetailsCamp(portalLoginVo);
+	            // Build success response
+	            finalResponse.put("otp", otp.toString());
+	            finalResponse.put("otpCount", otpCount);
+	            finalResponse.put("isUserExists", true);
+	            finalResponse.put("otpExpirationTime", otpExpirationTime);
+	            finalResponse.put("messageSuccess", successMessage);
+	        } else {
+	            // Respond if OTP was generated recently
+	            finalResponse.put("errorMessage", errorMessage);
+	            finalResponse.put("otpCount", otpCount);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        finalResponse.put("error", "An error occurred while generating OTP.");
+	    }
 
-				if (portalLoginVo == null) {
+	    return finalResponse.toString();
+	}
 
-					hasFlag = false;
-				} else {
-					hasFlag = true;
-				}
+	// Simulated method to check if user exists
+	public boolean isUserExists(String mobile_no) {
+	    System.out.println("Checking if user exists");
+	    return portalDonorRepository.getPortalDonorDtlByMobileNo(mobile_no);
+	}
 
-			}
+	// Simulated method to return OTP count for a user (from cache or DB)
+	public int Otpcount(String mobile_no) {
+		// Check if the mobile number has a stored otpCount
+		return otpCountStore.getOrDefault(mobile_no, 0);
+	}
 
-			if (otpCount >= 1) {
-				previousOtpTimestamp = getPreviousOtpTimestampFromDB(portalLoginVo);
-
-			}
-			flag1 = "1";
-
-			if (otpCount < 1) {
-
-				if (hasFlag == true) {
-					if (flag1 == "1") {
-
-						if (mobile_no != null && !mobile_no.isEmpty()) {
-							boolean flg = true;
-							if (otpCount <= 4) {
-
-								otp = otp;
-								insertcount(portalLoginVo);
-							} else {
-								flg = false;
-							}
-
-							if (flg) {
-
-								msg = "Your eRaktKosh OTP for username ";
-								msg += mobile_no + " is: ";
-								SendMessageToUser.SendOTP(msg + otp + ". Please do not share your OTP with anyone.",
-										mobile_no);
-
-								System.out.println(otp);
-							} else {
-								flag1 = "0";
-							}
-						}
-					}
-				} else if (hasFlag == false) {
-					flag1 = "2";
-				} else {
-					flag1 = "0";
-				}
-			}
-
-			else {
-				if (!(timeDifference < fiveMinutesInSeconds)) {
-					if (hasFlag == true) {
-						if (flag1 == "1") {
-
-							if (mobile_no != null && !mobile_no.isEmpty()) {
-								boolean flg = true;
-								if (otpCount <= 4) {
-
-									insertcount(portalLoginVo);
-								} else {
-									flg = false;
-								}
-
-								if (flg) {
-
-									msg = "Your eRaktKosh OTP for username ";
-									msg += mobile_no + " is: ";
-									SendMessageToUser.SendOTP(msg + otp + ". Please do not share your OTP with anyone.",
-											mobile_no);
-
-									System.out.println(otp);
-								} else {
-									flag1 = "0";
-								}
-							}
-						}
-					} else if (hasFlag == false) {
-						flag1 = "2";
-					} else {
-						flag1 = "0";
-					}
-
-				} else {
-					flag1 = "3";
-				}
-
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
-		if (hasFlag == true) {
-			SendMessageToUser.SendOTP(msg + otp + ". Please do not share your OTP with anyone.", mobile_no);
-
-			
-			      // Store the OTP with the phone number as key (or user ID if applicable)
-		       // otpCache.put(mobile_no, String.valueOf(otp));
-			finalResponse.put("otp", otp);
-			finalResponse.put("isUserExists", hasFlag);
-			finalResponse.put("otpCount", otpCount);
-			// Store OTP and CAPTCHA in session
-
-		}
-
-		else {
-
-			hasFlag = false;
-			finalResponse.put("isUserExists", hasFlag);
-		}
-
-		session.setAttribute("generatedOtp", otp); // Store the OTP
-
-		session.setAttribute("otpExpiry", System.currentTimeMillis() + (60 * 1000)); // OTP expiry time (1 minute)
-		otpStore.put(mobile_no, otp.toString());
-		System.out.println("OTP set in session: " + otp);
-		System.out.println("Session ID when setting OTP: " + session.getId());
-
-		return finalResponse.toString();
-
+	// Simulated method to send OTP to the user
+	public void SendMessageToUser(String message, String mobile_no) {
+		// Implement actual SMS sending logic
+		System.out.println("Sending OTP to: " + mobile_no + " Message: " + message);
 	}
 
 	public BufferedImage generateCaptchaImage(String captchaText) {
@@ -241,29 +175,17 @@ public class PortalLoginService {
 		String captchaChars = "abcdefghijklmnopqrstuvwxyz#$#!&*^ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 		StringBuilder captchaText = new StringBuilder();
 
+		// Generate a random 6-character captcha
 		for (int i = 0; i < 6; i++) {
 			captchaText.append(captchaChars.charAt(random.nextInt(captchaChars.length())));
 		}
-		//captchaCache.put("ct", captchaText.toString());
+
+		// Store the captcha in Hazelcast without an expiration time
+		IMap<String, String> captchaMap = hazelcastInstance.getMap("captchaMap");
+
+		captchaMap.put(captchaText.toString(), captchaText.toString());
+
 		return captchaText.toString();
-
-	}
-
-	private void insertcount(PortalLoginEntity portalLoginVo) {
-	}
-
-	public boolean isUserExists(String mobile_no) {
-
-		System.out.println("Inside user exists");
-		Boolean hasFlag = portalDonorRepository.getPortalDonorDtlByMobileNo(mobile_no);
-		System.out.println("DD" + hasFlag);
-		return hasFlag;
-
-	}
-
-	public int Otpcount(String mobile_no) {
-
-		return 0;
 	}
 
 	public PortalLoginEntity fetchdetailsCamp(PortalLoginEntity PortalLoginEntity) {
@@ -281,22 +203,68 @@ public class PortalLoginService {
 
 	}
 
-	public int validate(String otp, String captcha, String mobileno) {
-		
-		/*
-		 * String otpGenerated=captchaCache.get(mobileno); String
-		 * capthcaGenerated=otpCache.get("ct");
-		 * 
-		 * 
-		 * if(otp.equals(otpGenerated) &&captcha.equals(capthcaGenerated) ) {
-		 * 
-		 * 
-		 * return 1;
-		 * 
-		 * }
-		 */
-		return 0;
+	 public ResponseEntity<?> validate(String otp, String captcha, String mobileno) {
+	        System.out.println(session.getId());
 
-	}
+	        // Get the OTP and CAPTCHA maps from Hazelcast
+	        IMap<String, String> otpMap = hazelcastInstance.getMap("otpMap");
+	        IMap<String, String> captchaMap = hazelcastInstance.getMap("captchaMap");
 
+	        // Retrieve stored OTP and CAPTCHA from Hazelcast
+	        String storedOtp = otpMap.get(mobileno);
+	        String storedCaptcha = captchaMap.get(captcha); // Make sure you use the same key to retrieve the CAPTCHA
+
+	        // Validate OTP
+	        if (storedOtp == null) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP not found for the given mobile number.");
+	        }
+	        if (!storedOtp.equals(otp)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid OTP.");
+	        }
+
+	        // Validate CAPTCHA
+	        if (storedCaptcha == null) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CAPTCHA not found for the given mobile number.");
+	        }
+	        if (!storedCaptcha.equals(captcha)) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid CAPTCHA.");
+	        }
+
+	        // If both OTP and CAPTCHA are valid, fetch user details
+	        return fetchUserDetails(mobileno);
+	    }
+
+	    // New method to fetch user details
+	    public ResponseEntity<?> fetchUserDetails(String mobileno) {
+	        PortalLoginEntity portalLoginEntity = portalDonorRepository.fetchDonorDetails(mobileno);
+	        
+	        // Check if user details are found
+	        if (portalLoginEntity == null) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+	        }
+
+	        // Log user details
+	        System.out.println(portalLoginEntity.getEdonorLName());
+	        System.out.println(portalLoginEntity.getEdonorFName());
+	        System.out.println(portalLoginEntity.getMobileno() + " This is donor Number");
+
+	        // Return user details
+	        return new ResponseEntity<>(portalLoginEntity, HttpStatus.OK);
+	    }
+	    
+	 // New service: Fetch previous donation details by mobile number
+	    public ResponseEntity<?> fetchPreviousDonationDetails(String mobileNo) {
+	        try {
+	            List<PortalLoginEntity> donationDetails = portalDonorRepository.getPrevDonationDetailsByMobile(mobileNo);
+
+	            if (donationDetails == null || donationDetails.isEmpty()) {
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No donation details found for this mobile number.");
+	            }
+	            
+	            
+	            return new ResponseEntity<>(donationDetails, HttpStatus.OK);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching previous donation details.");
+	        }
+	    }
 }

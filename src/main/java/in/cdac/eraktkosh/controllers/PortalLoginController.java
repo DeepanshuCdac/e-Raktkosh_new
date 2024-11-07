@@ -1,4 +1,3 @@
-
 package in.cdac.eraktkosh.controllers;
 
 import java.awt.image.BufferedImage;
@@ -19,137 +18,144 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.cdac.eraktkosh.entity.PortalLoginEntity;
+import in.cdac.eraktkosh.repository.EraktkoshPortalLoginRepository;
 import in.cdac.eraktkosh.services.PortalLoginService;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("eraktkosh")
-
 public class PortalLoginController {
 
-	@Autowired
-	PortalLoginService portalLoginService;
+    @Autowired
+    PortalLoginService portalLoginService;
 
-	@Autowired
-	HttpSession session;
+    @Autowired
+    EraktkoshPortalLoginRepository eraktkoshPortalLoginRepository;
 
-	// 1. Original endpoint for generating both OTP and Captcha
+    @Autowired
+    HttpSession session;
 
-	@PostMapping("/generateOTP")
-	public ResponseEntity<Map<String, String>> generateOTP(@RequestBody PortalLoginEntity portalLogin) {
-		Map<String, String> response1 = new HashMap<>();
-		String mobile_no = portalLogin.getMobileno();
-		String response = null;
+    // 1. Original endpoint for generating both OTP and Captcha
+    @PostMapping("/generateOTP")
+    public ResponseEntity<Map<String, String>> generateOTP(@RequestBody PortalLoginEntity portalLogin) {
+        Map<String, String> response1 = new HashMap<>();
+        String mobile_no = portalLogin.getMobileno();
+        String response = null;
 
-		try {
-			// Generate OTP
-			response = portalLoginService.generateOtp(mobile_no);
+        try {
+            // Generate OTP
+            response = portalLoginService.generateOtp(mobile_no);
 
-			// Generate CAPTCHA
-			String captcha = portalLoginService.generateCaptchaText();
-			BufferedImage captchaImage = portalLoginService.generateCaptchaImage(captcha);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(captchaImage, "png", baos);
-			String base64Captcha = Base64.getEncoder().encodeToString(baos.toByteArray());
-//SET OTP AND CAPTHCA IN SESSION
+            // Generate CAPTCHA
+            String captcha = portalLoginService.generateCaptchaText();
+            BufferedImage captchaImage = portalLoginService.generateCaptchaImage(captcha);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(captchaImage, "png", baos);
+            String base64Captcha = Base64.getEncoder().encodeToString(baos.toByteArray());
 
-			System.out.println(session.getAttribute("generatedOtp"));
+            // Return OTP and CAPTCHA
+            response1.put("captchaImage",  base64Captcha);
+            response1.put("captchaText", captcha);
+            response1.put("OtpData", response);
 
-			System.out.println(session.getAttribute("generatedCaptcha"));
+        } catch (InvalidKeyException | NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+        }
 
-			// Return OTP and CAPTCHA
-			response1.put("captchaImage", "data:image/png;base64," + base64Captcha);
-			response1.put("captchaText", captcha);
-			response1.put("OtpData", response);
+        return new ResponseEntity<>(response1, new HttpHeaders(), HttpStatus.OK);
+    }
 
-		} catch (InvalidKeyException | NoSuchAlgorithmException | IOException e) {
-			e.printStackTrace();
-		}
+    // 2. New endpoint for regenerating only the OTP
+    @PostMapping("/regenerateOtp")
+    public ResponseEntity<Map<String, String>> regenerateOtp(@RequestBody PortalLoginEntity portalLogin) {
+        Map<String, String> response = new HashMap<>();
+        String mobile_no = portalLogin.getMobileno(); 
 
-		return new ResponseEntity<>(response1, new HttpHeaders(), HttpStatus.OK);
-	}
+        try {
+            // Generate OTP only
+            String otpResponse = portalLoginService.generateOtp(mobile_no);
+            response.put("OtpData", otpResponse);
+        } catch (InvalidKeyException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
-	// 2. New endpoint for regenerating only the OTP
-	@PostMapping("/regenerateOtp")
-	public ResponseEntity<Map<String, String>> regenerateOtp(@RequestBody PortalLoginEntity portalLogin) {
-		Map<String, String> response = new HashMap<>();
-		String mobile_no = portalLogin.getMobileno();
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+    }
 
-		try {
-			// Generate OTP only
-			String otpResponse = portalLoginService.generateOtp(mobile_no);
-			response.put("OtpData", otpResponse);
+    // 3. New endpoint for regenerating only the CAPTCHA
+    @PostMapping("/regenerateCaptcha")
+    public ResponseEntity<Map<String, String>> regenerateCaptcha() {
+        Map<String, String> response = new HashMap<>();
 
-			System.out.println(session.getAttribute("generatedOtp"));
+        try {
+            // Generate CAPTCHA only
+            String captcha = portalLoginService.generateCaptchaText();
+            BufferedImage captchaImage = portalLoginService.generateCaptchaImage(captcha);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(captchaImage, "png", baos);
+            String base64Captcha = Base64.getEncoder().encodeToString(baos.toByteArray());
 
-		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
+            // Return CAPTCHA
+            response.put("captchaImage", "data:image/png;base64," + base64Captcha);
+            response.put("captchaText", captcha);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+    }
 
-	// 3. New endpoint for regenerating only the CAPTCHA
-	@PostMapping("/regenerateCaptcha")
-	public ResponseEntity<Map<String, String>> regenerateCaptcha() {
-		Map<String, String> response = new HashMap<>();
-
-		try {
-			// Generate CAPTCHA only
-			String captcha = portalLoginService.generateCaptchaText();
-			BufferedImage captchaImage = portalLoginService.generateCaptchaImage(captcha);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(captchaImage, "png", baos);
-			String base64Captcha = Base64.getEncoder().encodeToString(baos.toByteArray());
-
-			// Return CAPTCHA
-			response.put("captchaImage", "data:image/png;base64," + base64Captcha);
-			response.put("captchaText", captcha);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-	}
-
-	// 4. New endpoint for validating OTP and CAPTCHA
-	@PostMapping("/validate")
-	public ResponseEntity<Map<String, Object>> validate(@RequestBody String  requestData) {
-		Map<String, Object> response = new HashMap<>();
-
-		// Extract mobileNo, otp, and captcha from the request body (Map)
-		// String mobileNo = requestData.get("mobileNo");
-		
-		System.out.println("Dasdasdasd");
-		//String inputOtp = requestData.get("otp");
-		//String inputCaptcha = requestData.get("captcha");
-		//String mobileNo = requestData.get("mobileno");
-
-		JSONObject jsonObject = new JSONObject(requestData);
+    // 4. Validate OTP and CAPTCHA
+    @PostMapping("/validate")
+    public ResponseEntity<?> validate(@RequestBody String requestData, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        JSONObject jsonObject = new JSONObject(requestData);
 
         // Extract values
         String inputOtp = jsonObject.getString("otp");
         String inputCaptcha = jsonObject.getString("captcha");
-        String mobileNo =  jsonObject.getString("mobile_no");
-		
-		
-		
-		int isValid=portalLoginService.validate(inputOtp, inputCaptcha, mobileNo);
+        String mobileNo = jsonObject.getString("mobile_no");
 
+        return portalLoginService.validate(inputOtp, inputCaptcha, mobileNo);
+    }
+
+    // 5. New endpoint for fetching donor details
        
-		
-		if(isValid==1) {
-			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-			
-		}
-		return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.FORBIDDEN);
-	
-	}
+        @PostMapping("/fetchDonorDetails")
+        public ResponseEntity<?> fetchDonorDetails(@RequestBody Map<String, String> request) {
+            String mobile_no = request.get("mobile_no");
+            
+            if (mobile_no == null || mobile_no.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Mobile number is required.");
+            }
+
+            ResponseEntity<?> donorDetails = portalLoginService.fetchUserDetails(mobile_no);
+
+            if (donorDetails == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No donor details found for the given mobile number.");
+            }
+
+            return ResponseEntity.ok(donorDetails);
+        }
+        
+//        6. Endpoint for fetching donor certificate.
+        
+        @PostMapping("/moreDonorDetails")
+        public ResponseEntity<?> getPreviousDonationDetailsByMobile(@RequestBody Map<String, String> request) {
+            String mobileno = request.get("mobileno");
+            if (mobileno == null || mobileno.isEmpty()) {
+                return ResponseEntity.badRequest().body("Mobile number is required");
+            }
+            return portalLoginService.fetchPreviousDonationDetails(mobileno);
+        }
 
 }
