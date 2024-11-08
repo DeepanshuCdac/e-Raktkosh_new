@@ -53,24 +53,12 @@ public class PortalLoginService {
 
 	public String generateOtp(String mobile_no) throws InvalidKeyException, NoSuchAlgorithmException {
 	    JSONObject finalResponse = new JSONObject();
-	    SecureRandom random = new SecureRandom();
-	    StringBuilder otp = new StringBuilder(OTP_LENGTH);
-	    
-	    // Generate a random 6-digit OTP
-	    for (int i = 0; i < OTP_LENGTH; i++) {
-	        int index = random.nextInt(OTP_CHARS.length());
-	        otp.append(OTP_CHARS.charAt(index));
-	    }
-
-	    String msg = "Your eRaktKosh OTP for username ";
-	    String contactno = "*******" + mobile_no.substring(mobile_no.length() - 3);
-	    msg += contactno + " is: ";
 
 	    try {
-	        // Check if the user exists
+	        // Check if the user exists first
 	        boolean userExists = isUserExists(mobile_no);
-	        String userNotExistMessage = "If you are a Registered User you will get an Otp.";
-	        
+	        String userNotExistMessage = "If you are a Registered User you will get an OTP.";
+
 	        // If the user does not exist, respond with an appropriate message
 	        if (!userExists) {
 	            finalResponse.put("isUserExists", false);
@@ -78,10 +66,22 @@ public class PortalLoginService {
 	            return finalResponse.toString();
 	        }
 
+	        // Generate a random 6-digit OTP only if the user exists
+	        SecureRandom random = new SecureRandom();
+	        StringBuilder otp = new StringBuilder(OTP_LENGTH);
+	        for (int i = 0; i < OTP_LENGTH; i++) {
+	            int index = random.nextInt(OTP_CHARS.length());
+	            otp.append(OTP_CHARS.charAt(index));
+	        }
+
+	        String msg = "Your eRaktKosh OTP for username ";
+	        String contactno = "*******" + mobile_no.substring(mobile_no.length() - 3);
+	        msg += contactno + " is: ";
+
 	        int otpCount = Otpcount(mobile_no);
 	        long currentTime = System.currentTimeMillis();
 	        Long lastOtpTimestamp = otpTimestampStore.get(mobile_no);
-	        String successMessage = "If you are a Registered User you will get an Otp.";
+	        String successMessage = "If you are a Registered User you will get an OTP.";
 	        String errorMessage = "Try After Some time ......!";
 
 	        // Check if OTP should be generated based on timing and count
@@ -125,6 +125,7 @@ public class PortalLoginService {
 	    System.out.println("Checking if user exists");
 	    return portalDonorRepository.getPortalDonorDtlByMobileNo(mobile_no);
 	}
+
 
 	// Simulated method to return OTP count for a user (from cache or DB)
 	public int Otpcount(String mobile_no) {

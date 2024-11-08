@@ -63,7 +63,7 @@ public class PortalLoginController {
             String base64Captcha = Base64.getEncoder().encodeToString(baos.toByteArray());
 
             // Return OTP and CAPTCHA
-            response1.put("captchaImage",  base64Captcha);
+            response1.put("captchaImage", "data:image/png;base64," +  base64Captcha);
             response1.put("captchaText", captcha);
             response1.put("OtpData", response);
 
