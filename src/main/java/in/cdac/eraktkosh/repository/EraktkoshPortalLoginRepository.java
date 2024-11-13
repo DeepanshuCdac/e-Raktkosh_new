@@ -97,11 +97,9 @@ public class EraktkoshPortalLoginRepository {
 	@SuppressWarnings("deprecation")
 	public PortalLoginEntity fetchDonorDetails(String MobileNo) {
         try {
-            // Fetch donor details using the full query
             return jdbcTemplate.queryForObject(QUERY2, new Object[] { MobileNo }, (rs, rowNum) -> {
                 PortalLoginEntity entity = new PortalLoginEntity();
 
-                // Map all fields from the result set to the PortalLoginEntity
                 entity.setEdonorFName(rs.getString("hbstr_fname"));
                 entity.setEdonorLName(rs.getString("hbstr_lname"));
                 entity.setBloodGroup(rs.getString("hbnum_bldgrp_code"));
@@ -149,16 +147,15 @@ public class EraktkoshPortalLoginRepository {
 	            (rs, rowNum) -> {
 	                PortalLoginEntity prevDonation = new PortalLoginEntity();
 	                prevDonation.setBagNo(rs.getString("BAGNO"));
-	                // prevDonation.setEntryDate(rs.getDate("GDT_ENTRY_DATE")); // Uncomment if needed
+	                // prevDonation.setEntryDate(rs.getDate("GDT_ENTRY_DATE"));
 	                prevDonation.setUsername(rs.getString("USERNAME"));
 	                prevDonation.setOrganizationName(rs.getString("ORGANIZATIONNAME"));
 	                prevDonation.setOrganizationType(rs.getString("ORGANIZATIONTYPE"));
 	                prevDonation.setStateName(rs.getString("STATENAME"));
 	                prevDonation.setDistrictName(rs.getString("DISTRICTNAME"));
-	                // prevDonation.setDate(rs.getDate("date")); // Uncomment if needed
-	                 prevDonation.setBloodbank(rs.getString("BLOODBANK")); // Uncomment if needed
+	                 prevDonation.setDate(rs.getString("date"));
+	                 prevDonation.setBloodbank(rs.getString("BLOODBANK")); 
 	                prevDonation.setBloodGroupName(rs.getString("BLOODGROUPNAME"));
-	                // prevDonation.setDonorType(rs.getInt("DONORTYPE")); // Uncomment if needed
 	                return prevDonation;
 	            });
 	    } catch (Exception e) {

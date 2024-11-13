@@ -149,7 +149,7 @@ public class PortalLoginController {
         
 //        6. Endpoint for fetching donor certificate.
         
-        @PostMapping("/moreDonorDetails")
+        @PostMapping("/fetchCertificateDetails")
         public ResponseEntity<?> getPreviousDonationDetailsByMobile(@RequestBody Map<String, String> request) {
             String mobileno = request.get("mobileno");
             if (mobileno == null || mobileno.isEmpty()) {

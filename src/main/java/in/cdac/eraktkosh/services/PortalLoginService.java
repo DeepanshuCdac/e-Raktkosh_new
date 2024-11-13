@@ -259,7 +259,7 @@ public class PortalLoginService {
 	            List<PortalLoginEntity> donationDetails = portalDonorRepository.getPrevDonationDetailsByMobile(mobileNo);
 
 	            if (donationDetails == null || donationDetails.isEmpty()) {
-	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No donation details found for this mobile number.");
+	                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No donation details found for mobile number " + mobileNo);
 	            }
 	            
 	            
