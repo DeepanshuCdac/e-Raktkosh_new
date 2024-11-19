@@ -63,7 +63,7 @@ public class PortalLoginController {
             String base64Captcha = Base64.getEncoder().encodeToString(baos.toByteArray());
 
             // Return OTP and CAPTCHA
-            response1.put("captchaImage",  base64Captcha);
+            response1.put("captchaImage", "data:image/png;base64," +  base64Captcha);
             response1.put("captchaText", captcha);
             response1.put("OtpData", response);
 
@@ -124,7 +124,7 @@ public class PortalLoginController {
         String inputOtp = jsonObject.getString("otp");
         String inputCaptcha = jsonObject.getString("captcha");
         String mobileNo = jsonObject.getString("mobile_no");
-
+System.out.println();
         return portalLoginService.validate(inputOtp, inputCaptcha, mobileNo);
     }
 
@@ -149,7 +149,7 @@ public class PortalLoginController {
         
 //        6. Endpoint for fetching donor certificate.
         
-        @PostMapping("/moreDonorDetails")
+        @PostMapping("/fetchCertificateDetails")
         public ResponseEntity<?> getPreviousDonationDetailsByMobile(@RequestBody Map<String, String> request) {
             String mobileno = request.get("mobileno");
             if (mobileno == null || mobileno.isEmpty()) {
