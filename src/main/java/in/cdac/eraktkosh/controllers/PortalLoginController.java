@@ -124,7 +124,7 @@ public class PortalLoginController {
         String inputOtp = jsonObject.getString("otp");
         String inputCaptcha = jsonObject.getString("captcha");
         String mobileNo = jsonObject.getString("mobile_no");
-
+System.out.println();
         return portalLoginService.validate(inputOtp, inputCaptcha, mobileNo);
     }
 
