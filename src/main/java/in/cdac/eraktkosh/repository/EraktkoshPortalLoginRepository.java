@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import in.cdac.eraktkosh.entity.PortalLoginEntity;
+import in.cdac.eraktkosh.services.QueryLoader;
 
 @Repository
 public class EraktkoshPortalLoginRepository {
@@ -35,18 +36,14 @@ public class EraktkoshPortalLoginRepository {
 
 	private static final String INSERT_OTP_COUNT_QUERY =  "INSERT INTO hbbt_daily_mobile_otp_count (hbstr_mobileno,msg_date) VALUES (?,sysdate)";
 
+	 private final QueryLoader queryLoader;
 
 
 
 	// to find all the query from thr propertiy file
-
-	@Value("$query.GET_OTP_COUNT")
-	private String getOtpCountQuery;
-	@Value("$query.INSERT.OTP.COUNT")
-	private String INSERT_OTP_COUNT;
-	
-	
-	
+	 public EraktkoshPortalLoginRepository() {
+	        queryLoader = new QueryLoader("Query.properties"); // Load the queries from properties
+	    }
 	
 
 
@@ -209,12 +206,14 @@ public class EraktkoshPortalLoginRepository {
 
 
 	public int getOtpCount(String mobileNumber) {
-		// Use the query injected from quer.properties and pass the mobile number as a parameter
-		return jdbcTemplate.queryForObject(getOtpCountQuery, Integer.class, mobileNumber);
+		 String query = queryLoader.getQuery("query.GET_OTP_COUNT");
+	      
+		return jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
 	}
 	
 	public int insertOtpCount(String mobileNumber) {
-		// Use the query injected from quer.properties and pass the mobile number as a parameter
-		return jdbcTemplate.queryForObject(INSERT_OTP_COUNT, Integer.class, mobileNumber);
+		 String query = queryLoader.getQuery("query.GET_OTP_COUNT");
+	      
+		return jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
 	}
 }
