@@ -36,13 +36,12 @@ public class EraktkoshPortalLoginRepository {
 
 	private static final String INSERT_OTP_COUNT_QUERY =  "INSERT INTO hbbt_daily_mobile_otp_count (hbstr_mobileno,msg_date) VALUES (?,sysdate)";
 
-	 private final QueryLoader queryLoader;
 
-
-
+	
+	private final QueryLoader queryLoader;
 	// to find all the query from thr propertiy file
 	 public EraktkoshPortalLoginRepository() {
-	        queryLoader = new QueryLoader("Query.properties"); // Load the queries from properties
+	        queryLoader = new QueryLoader("query.properties"); // Load the queries from properties
 	    }
 	
 
@@ -206,14 +205,15 @@ public class EraktkoshPortalLoginRepository {
 
 
 	public int getOtpCount(String mobileNumber) {
-		 String query = queryLoader.getQuery("query.GET_OTP_COUNT");
+		  String query = queryLoader.getQuery("query.GET_OTP_COUNT");
 	      
-		return jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
+	      int count =jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
+		return count;
 	}
 	
-	public int insertOtpCount(String mobileNumber) {
-		 String query = queryLoader.getQuery("query.GET_OTP_COUNT");
-	      
-		return jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
+	public String insertOtpCount(String mobileNumber) {
+		 String query = queryLoader.getQuery("query.INSERT.OTP.COUNT");
+		 jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
+		return query;
 	}
 }
