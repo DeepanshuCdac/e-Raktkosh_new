@@ -79,6 +79,7 @@ public class PortalLoginService {
 	        msg += contactno + " is: ";
 
 	        int otpCount = Otpcount(mobile_no);
+	        System.out.println("OTP COUNT :"+otpCount);
 	        long currentTime = System.currentTimeMillis();
 	        Long lastOtpTimestamp = otpTimestampStore.get(mobile_no);
 	        String successMessage = "If you are a Registered User you will get an OTP.";
@@ -90,6 +91,7 @@ public class PortalLoginService {
 	            otpCount++;
 	            otpCountStore.put(mobile_no, otpCount);
 	            otpTimestampStore.put(mobile_no, currentTime);
+	            portalDonorRepository.insertOtpCount(mobile_no);
 
 	            // Calculate OTP expiration time (current time + 5 minutes)
 	            long otpExpirationTime = currentTime + OTP_EXPIRATION_TIME;
@@ -129,8 +131,9 @@ public class PortalLoginService {
 
 	// Simulated method to return OTP count for a user (from cache or DB)
 	public int Otpcount(String mobile_no) {
+		return portalDonorRepository.getOtpCount(mobile_no);
 		// Check if the mobile number has a stored otpCount
-		return otpCountStore.getOrDefault(mobile_no, 0);
+		
 	}
 
 	// Simulated method to send OTP to the user
