@@ -91,6 +91,7 @@ public class PortalLoginService {
 	            otpCount++;
 	            otpCountStore.put(mobile_no, otpCount);
 	            otpTimestampStore.put(mobile_no, currentTime);
+	            portalDonorRepository.insertOtpCount(mobile_no);
 
 	            // Calculate OTP expiration time (current time + 5 minutes)
 	            long otpExpirationTime = currentTime + OTP_EXPIRATION_TIME;
