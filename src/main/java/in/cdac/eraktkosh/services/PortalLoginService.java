@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import java.time.Duration;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 
@@ -44,73 +46,87 @@ public class PortalLoginService {
 	@Autowired
 	private HazelcastInstance hazelcastInstance;
 
-	private final String OTP_CHARS = "0123456789";
-	private final int OTP_LENGTH = 6;
-	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000;
-
-	private Map<String, Integer> otpCountStore = new HashMap<>(); // to store otpCount for each user
-	private Map<String, Long> otpTimestampStore = new HashMap<>();
+	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes
+	private static final int OTP_LENGTH = 6; // Length of the OTP
+	private static final String OTP_CHARS = "0123456789"; // OTP characters (numbers only)
+	private static final int DAILY_OTP_LIMIT = 5; // Daily OTP limit
 
 	public String generateOtp(String mobile_no) throws InvalidKeyException, NoSuchAlgorithmException {
 	    JSONObject finalResponse = new JSONObject();
 
 	    try {
-	        // Check if the user exists first
+	        // Check if the user exists
 	        boolean userExists = isUserExists(mobile_no);
-	        String userNotExistMessage = "If you are a Registered User you will get an OTP.";
+	        String userNotExistMessage = "If you are a Registered User, you will get an OTP.";
 
-	        // If the user does not exist, respond with an appropriate message
 	        if (!userExists) {
 	            finalResponse.put("isUserExists", false);
 	            finalResponse.put("messageSuccess", userNotExistMessage);
 	            return finalResponse.toString();
 	        }
 
-	        // Generate a random 6-digit OTP only if the user exists
-	        SecureRandom random = new SecureRandom();
-	        StringBuilder otp = new StringBuilder(OTP_LENGTH);
-	        for (int i = 0; i < OTP_LENGTH; i++) {
-	            int index = random.nextInt(OTP_CHARS.length());
-	            otp.append(OTP_CHARS.charAt(index));
+	        // Get OTP count and last OTP generation timestamp from DB
+	        int otpCount = Otpcount(mobile_no);
+	        System.out.println("Current OTP COUNT: " + otpCount);
+
+	        if (otpCount >= DAILY_OTP_LIMIT) {
+	            // Respond with a message indicating daily limit exceeded
+	            finalResponse.put("errorMessage", "Daily OTP limit exceeded. Please try again tomorrow.");
+	            finalResponse.put("otpCount", otpCount);
+	            return finalResponse.toString();
 	        }
 
-	        String msg = "Your eRaktKosh OTP for username ";
-	        String contactno = "*******" + mobile_no.substring(mobile_no.length() - 3);
-	        msg += contactno + " is: ";
+	        String lastOtpTimestamp = portalDonorRepository.getPreviousOtpTimeStamp(mobile_no);
 
-	        int otpCount = Otpcount(mobile_no);
-	        System.out.println("OTP COUNT :"+otpCount);
-	        long currentTime = System.currentTimeMillis();
-	        Long lastOtpTimestamp = otpTimestampStore.get(mobile_no);
-	        String successMessage = "If you are a Registered User you will get an OTP.";
+	        // Get the time difference between the last OTP generation and the current time
+	        long minutes = 0;
+	        if (lastOtpTimestamp != null) {
+	            LocalTime lastOtpTime = LocalTime.parse(lastOtpTimestamp);
+	            LocalTime currentTime1 = LocalTime.now();
+
+	            Duration duration = Duration.between(lastOtpTime, currentTime1);
+	            minutes = duration.toMinutes(); // Get minutes difference
+	        }
+
+	        // Check if OTP can be generated (time difference is more than 5 minutes)
+	        String successMessage = "If you are a Registered User, you will get an OTP.";
 	        String errorMessage = "Try After Some time ......!";
 
-	        // Check if OTP should be generated based on timing and count
-	        if (otpCount == 0 || (lastOtpTimestamp != null && currentTime - lastOtpTimestamp >= OTP_EXPIRATION_TIME)) {
-	            // Update OTP count and timestamp if eligible for a new OTP
-	            otpCount++;
-	            otpCountStore.put(mobile_no, otpCount);
-	            otpTimestampStore.put(mobile_no, currentTime);
+	        if (lastOtpTimestamp == null || minutes >= 5) {
+	            // Generate a random 6-digit OTP
+	            SecureRandom random = new SecureRandom();
+	            StringBuilder otp = new StringBuilder(OTP_LENGTH);
+	            for (int i = 0; i < OTP_LENGTH; i++) {
+	                int index = random.nextInt(OTP_CHARS.length());
+	                otp.append(OTP_CHARS.charAt(index));
+	            }
+
+	            String msg = "Your eRaktKosh OTP for username ";
+	            String contactno = "*******" + mobile_no.substring(mobile_no.length() - 3);
+	            msg += contactno + " is: ";
+
+	            // Increment OTP count in DB before sending the OTP
 	            portalDonorRepository.insertOtpCount(mobile_no);
+	            otpCount++; // Update the count in the current context
 
 	            // Calculate OTP expiration time (current time + 5 minutes)
-	            long otpExpirationTime = currentTime + OTP_EXPIRATION_TIME;
+	            long otpExpirationTime = System.currentTimeMillis() + OTP_EXPIRATION_TIME;
 
-	            // Send OTP message
+	            // Send OTP message to user
 	            SendMessageToUser.SendOTP(msg + otp + ". Please do not share your OTP with anyone.", mobile_no);
 
-	            // Store OTP in Hazelcast with expiration
+	            // Store OTP in Hazelcast with expiration time
 	            IMap<String, String> otpMap = hazelcastInstance.getMap("otpMap");
 	            otpMap.put(mobile_no, otp.toString(), OTP_EXPIRATION_TIME, TimeUnit.MINUTES);
 
 	            // Build success response
 	            finalResponse.put("otp", otp.toString());
-	            finalResponse.put("otpCount", otpCount);
+	            finalResponse.put("otpCount", otpCount); // Include the updated count
 	            finalResponse.put("isUserExists", true);
 	            finalResponse.put("otpExpirationTime", otpExpirationTime);
 	            finalResponse.put("messageSuccess", successMessage);
 	        } else {
-	            // Respond if OTP was generated recently
+	            // Respond if the time difference is less than 5 minutes
 	            finalResponse.put("errorMessage", errorMessage);
 	            finalResponse.put("otpCount", otpCount);
 	        }
@@ -128,13 +144,12 @@ public class PortalLoginService {
 	    return portalDonorRepository.getPortalDonorDtlByMobileNo(mobile_no);
 	}
 
-
-	// Simulated method to return OTP count for a user (from cache or DB)
+	// Simulated method to return OTP count for a user (from DB)
 	public int Otpcount(String mobile_no) {
-		return portalDonorRepository.getOtpCount(mobile_no);
-		// Check if the mobile number has a stored otpCount
-		
+	    return portalDonorRepository.getOtpCount(mobile_no);
 	}
+
+
 
 	// Simulated method to send OTP to the user
 	public void SendMessageToUser(String message, String mobile_no) {

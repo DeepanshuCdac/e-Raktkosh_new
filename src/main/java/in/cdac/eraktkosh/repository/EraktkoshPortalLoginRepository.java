@@ -206,14 +206,33 @@ public class EraktkoshPortalLoginRepository {
 
 	public int getOtpCount(String mobileNumber) {
 		  String query = queryLoader.getQuery("query.GET_OTP_COUNT");
-	      
-	      int count =jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
+		  int count=0;
+		  try {
+	       count =jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
+		  }
+		  catch (Exception e) {
+			  e.printStackTrace();
+			// TODO: handle exception
+		}
 		return count;
 	}
 	
 	public String insertOtpCount(String mobileNumber) {
 		 String query = queryLoader.getQuery("query.INSERT.OTP.COUNT");
-		 jdbcTemplate.queryForObject(query, Integer.class, mobileNumber);
+		 jdbcTemplate.update(query,  mobileNumber);
 		return query;
+	}
+	
+	public String getPreviousOtpTimeStamp(String mobileNumber) {
+		 String query = queryLoader.getQuery("query.SELECCT.OTP.TIME");
+		 String timeStamp=null;
+		 try {
+			 List<String> result = jdbcTemplate.queryForList(query, String.class, mobileNumber);
+			  timeStamp = result.isEmpty() ? null : result.get(0);
+		 }catch (EmptyResultDataAccessException  e) {
+			 e.printStackTrace();
+			// TODO: handle exception
+		}
+		 return timeStamp;
 	}
 }
