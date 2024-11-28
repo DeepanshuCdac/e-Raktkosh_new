@@ -57,11 +57,11 @@ public class PortalLoginService {
 	    try {
 	        // Check if the user exists
 	        boolean userExists = isUserExists(mobile_no);
-	        String userNotExistMessage = "If you are a Registered User, you will get an OTP.";
+//	        String userNotExistMessage = "If you are a Registered User, you will get an OTP.";
 
 	        if (!userExists) {
 	            finalResponse.put("isUserExists", false);
-	            finalResponse.put("messageSuccess", userNotExistMessage);
+	            finalResponse.put("messageSuccess", "If you are a Registered User, you will get an OTP.");
 	            return finalResponse.toString();
 	        }
 
@@ -89,8 +89,8 @@ public class PortalLoginService {
 	        }
 
 	        // Check if OTP can be generated (time difference is more than 5 minutes)
-	        String successMessage = "If you are a Registered User, you will get an OTP.";
-	        String errorMessage = "Try After Some time ......!";
+//	        String successMessage = "If you are a Registered User, you will get an OTP.";
+//	        String errorMessage = "Try After Some time ......!";
 
 	        if (lastOtpTimestamp == null || minutes >= 5) {
 	            // Generate a random 6-digit OTP
@@ -124,10 +124,10 @@ public class PortalLoginService {
 	            finalResponse.put("otpCount", otpCount); // Include the updated count
 	            finalResponse.put("isUserExists", true);
 	            finalResponse.put("otpExpirationTime", otpExpirationTime);
-	            finalResponse.put("messageSuccess", successMessage);
+	            finalResponse.put("messageSuccess", "If you are a Registered User, you will get an OTP.");
 	        } else {
 	            // Respond if the time difference is less than 5 minutes
-	            finalResponse.put("errorMessage", errorMessage);
+	            finalResponse.put("errorMessage", "Try After Some time ......!");
 	            finalResponse.put("otpCount", otpCount);
 	        }
 	    } catch (Exception e) {
