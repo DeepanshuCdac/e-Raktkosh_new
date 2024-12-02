@@ -45,11 +45,11 @@ public class PortalLoginService {
 	HttpSession session;
 	@Autowired
 	private HazelcastInstance hazelcastInstance;
-
+	
 	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes
 	private static final int OTP_LENGTH = 6; // Length of the OTP
 	private static final String OTP_CHARS = "0123456789"; // OTP characters (numbers only)
-	private static final int DAILY_OTP_LIMIT = 7; // Daily OTP limit
+	private static final int DAILY_OTP_LIMIT = 5; // Daily OTP limit
 
 	public String generateOtp(String mobile_no) throws InvalidKeyException, NoSuchAlgorithmException {
 	    JSONObject finalResponse = new JSONObject();
@@ -61,7 +61,7 @@ public class PortalLoginService {
 
 	        if (!userExists) {
 	            finalResponse.put("isUserExists", false);
-	            finalResponse.put("messageSuccess", "If you are a Registered User, you will get an OTP.");
+	            finalResponse.put("notRegisteredMessage", "If you are a Registered User, you will get an OTP.");
 	            return finalResponse.toString();
 	        }
 
@@ -72,7 +72,7 @@ public class PortalLoginService {
 	        if (otpCount >= DAILY_OTP_LIMIT) {
 	            // Respond with a message indicating daily limit exceeded
 	        	 finalResponse.put("isUserExists", true);
-	            finalResponse.put("errorMessage", "Daily OTP limit exceeded. Please try again tomorrow.");
+	            finalResponse.put("limitExceedMessage", "Daily OTP limit exceeded. Please try again tomorrow.");
 	            finalResponse.put("otpCount", otpCount);
 	            return finalResponse.toString();
 	        }
