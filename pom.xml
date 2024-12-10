@@ -9,11 +9,11 @@
 		<relativePath/> 
 	</parent>
 	<groupId>in.cdac</groupId>
-	<artifactId>AppDemo</artifactId>
+	<artifactId>eRaktkosh</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	 <packaging>war</packaging>
-	<name>AppDemo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>eRaktkosh</name>
+	<description>eRaktkosh Project</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -41,33 +41,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!-- https://mvnrepository.com/artifact/com.hazelcast/hazelcast -->
-<!--<dependency>-->
-<!--    <groupId>com.hazelcast</groupId>-->
-<!--    <artifactId>hazelcast</artifactId>-->
-  
-<!--</dependency>-->
-
-<!--<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-security</artifactId>
-</dependency>-->
-
 <dependency>
     <groupId>com.hazelcast</groupId>
     <artifactId>hazelcast-spring</artifactId>
     <version>4.2.4</version>
 </dependency>
-
-		
-		
-		
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 <dependency>
     <groupId>org.apache.httpcomponents</groupId>
     <artifactId>httpclient</artifactId>
     </dependency>
-
 		<dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -79,7 +61,6 @@
     <artifactId>jjwt</artifactId>
     <version>0.9.1</version>
 </dependency>
-    
 <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -99,14 +80,11 @@
     </exclusion>
 </exclusions>
 </dependency>
-<!-- https://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.1-api -->
 <dependency>
     <groupId>org.hibernate.javax.persistence</groupId>
     <artifactId>hibernate-jpa-2.1-api</artifactId>
     <version>1.0.2</version>
 </dependency>
-
-<!-- https://mvnrepository.com/artifact/org.json/json -->
 <dependency>
     <groupId>org.json</groupId>
     <artifactId>json</artifactId>
@@ -117,21 +95,14 @@
     <artifactId>spring-context</artifactId>
     <version>5.3.25</version> 
 </dependency>
-
 	</dependencies>
-
 	<build>
 		<plugins>
-			
-
 <plugin>
 <groupId>org.wildfly.plugins</groupId>
 <artifactId>wildfly-maven-plugin</artifactId>
 <version>3.0.2.Final</version>
 </plugin>
-
-			
 		</plugins>
 	</build>
-
 </project>

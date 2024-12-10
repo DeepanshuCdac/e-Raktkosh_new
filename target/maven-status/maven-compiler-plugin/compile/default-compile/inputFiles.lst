@@ -8,6 +8,8 @@ D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\config\BBPUB
 D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\repository\EraktkoshPortalLoginRepository.java
 D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\repository\EraktkoshPortalLoginRepository2.java
 D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\utility\HOTPAlgorithm.java
+D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\dto\AuthRequest.java
+D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\services\QueryLoader.java
 D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\utility\SendMessageToUser.java
 D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\AppDemoApplication.java
 D:\deepanshu_workspace\eraktKoshAPI\src\main\java\in\cdac\eraktkosh\repository\Repo.java

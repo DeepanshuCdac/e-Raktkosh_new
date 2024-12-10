@@ -1,6 +1,8 @@
 in\cdac\eraktkosh\config\BBPUBLICConfig$BBPUBLICeRaktKoshCONFIG.class
 in\cdac\eraktkosh\config\BBPUBLICConfig.class
+in\cdac\eraktkosh\dto\AuthRequest.class
 in\cdac\eraktkosh\entity\PortalLoginEntity.class
+in\cdac\eraktkosh\services\QueryLoader.class
 in\cdac\eraktkosh\config\BBPUBLICConfig$BBSTOCKCAMPSTATUS.class
 in\cdac\eraktkosh\config\BBPUBLICConfig$BBPUBLICNotificationRequestType.class
 in\cdac\eraktkosh\config\BBPUBLICConfig$BBENTRYMODE.class
