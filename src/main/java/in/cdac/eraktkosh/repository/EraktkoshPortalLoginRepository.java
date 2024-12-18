@@ -132,6 +132,24 @@ public class EraktkoshPortalLoginRepository {
 				entity.setisValidCredentails(true);
 
 				entity=	fetchManageProfileDetails(MobileNo, rs.getString("hbstr_password"));
+				
+				
+				//Save last login timestamp
+				try {
+				String udateQuery = queryLoader.getQuery("query.UPDATE.LAST.LOGIN.TIMESTAMP");
+				int rowsUpdated=jdbcTemplate.update(udateQuery, entity.getMobileno(), entity.getDonorPass());
+				
+				if(rowsUpdated>0) {
+					System.out.println("Last login updated");
+				}
+				else {
+					System.out.println("Not updated");
+				}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					// TODO: handle exception
+				}
 				return entity;
 			});
 		} catch (EmptyResultDataAccessException e) {
