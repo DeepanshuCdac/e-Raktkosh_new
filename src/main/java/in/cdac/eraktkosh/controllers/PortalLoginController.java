@@ -166,12 +166,11 @@ public class PortalLoginController {
     public ResponseEntity<?> updateOrInsertDonorDetails(@RequestBody PortalLoginEntity portalLoginEntity) {
         try {
         	
-//        	System.out.println("bht bada sheer::"+portalLoginEntity.getDonorFName());
             boolean isSuccess = portalLoginService.updateOrInsertDonorDetails(portalLoginEntity);
 
             if (isSuccess) {
                 return ResponseEntity.ok("Donor details updated or inserted successfully.");
-            } else {
+             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Failed to update or insert donor details.");
             }
