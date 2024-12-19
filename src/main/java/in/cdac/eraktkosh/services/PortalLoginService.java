@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -216,35 +218,46 @@ public class PortalLoginService {
 	}
 
 	public ResponseEntity<?> validate(String otp, String captcha, String mobileno) {
-		System.out.println(session.getId());
+	    System.out.println(session.getId());
 
-		// Get the OTP and CAPTCHA maps from Hazelcast
-		IMap<String, String> otpMap = hazelcastInstance.getMap("otpMap");
-		IMap<String, String> captchaMap = hazelcastInstance.getMap("captchaMap");
+	    // Get the OTP and CAPTCHA maps from Hazelcast
+	    IMap<String, String> otpMap = hazelcastInstance.getMap("otpMap");
+	    IMap<String, String> captchaMap = hazelcastInstance.getMap("captchaMap");
 
-		// Retrieve stored OTP and CAPTCHA from Hazelcast
-		String storedOtp = otpMap.get(mobileno);
-		String storedCaptcha = captchaMap.get(captcha); // Make sure you use the same key to retrieve the CAPTCHA
+	    // Retrieve stored OTP and CAPTCHA from Hazelcast
+	    String storedOtp = otpMap.get(mobileno);
+	    String storedCaptcha = captchaMap.get(mobileno); // Ensure correct key is used for CAPTCHA retrieval
 
-		// Validate OTP
-		if (storedOtp == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP not found for the given mobile number.");
-		}
-		if (!storedOtp.equals(otp)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid OTP.");
-		}
+	    // Validate OTP
+	    if (storedOtp == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("OTP not found for the given mobile number.");
+	    }
+	    if (!storedOtp.equals(otp)) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid OTP.");
+	    }
 
-		// Validate CAPTCHA
-		if (storedCaptcha == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CAPTCHA not found for the given mobile number.");
-		}
-		if (!storedCaptcha.equals(captcha)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid CAPTCHA.");
-		}
+	    // Validate CAPTCHA
+	    if (storedCaptcha == null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CAPTCHA not found for the given mobile number.");
+	    }
+	    if (!storedCaptcha.equals(captcha)) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid CAPTCHA.");
+	    }
 
-		// If both OTP and CAPTCHA are valid, fetch user details
-		return fetchUserDetails(mobileno);
+	    // Fetch user details after successful validation
+	    ResponseEntity<?> userDetails = fetchUserDetails(mobileno);
+
+	    // Check if user details are retrieved
+	    if (userDetails == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User details not found.");
+	    }
+
+	
+
+	    // Return the user details
+	    return ResponseEntity.ok(userDetails);
 	}
+
 
 	// New method to fetch user details
 	public ResponseEntity<?> fetchUserDetails(String mobileno) {
@@ -260,7 +273,13 @@ public class PortalLoginService {
 		System.out.println(portalLoginEntity.getEdonorFName());
 		System.out.println(portalLoginEntity.getMobileno() + " This is donor Number");
 
-		
+	    // Update last login timestamp
+	    try {
+	    	portalDonorRepository.updateLastLoginTimestamp(mobileno, portalLoginEntity.getDonorPass());
+	    } catch (Exception e) {
+	      //  logger.error("Error updating last login timestamp", e);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating last login timestamp.");
+	    }
 		
 		// Return user details
 		return new ResponseEntity<>(portalLoginEntity, HttpStatus.OK);

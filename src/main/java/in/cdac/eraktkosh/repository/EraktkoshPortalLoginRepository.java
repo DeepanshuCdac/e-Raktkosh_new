@@ -100,65 +100,65 @@ public class EraktkoshPortalLoginRepository {
 	}
 
 	@SuppressWarnings("deprecation")
-	public PortalLoginEntity fetchDonorDetails(String MobileNo) {
-		try {
-			
-			 String query = queryLoader.getQuery("query.SELECT.DONOR_DETAILS");
-			 
-			return jdbcTemplate.queryForObject(query, new Object[] { MobileNo }, (rs, rowNum) -> {
-				PortalLoginEntity entity = new PortalLoginEntity();			
-				entity.setEdonorFName(rs.getString("hbstr_fname"));
-				entity.setEdonorLName(rs.getString("hbstr_lname"));
-				entity.setBloodGroup(rs.getString("hbnum_bldgrp_code"));
-				entity.setIsLastLogin(rs.getString("hbdt_lastlogin"));
-				entity.setIsFirstLogin(rs.getString("hbnum_firstlogin"));
-				entity.setUserType(rs.getString("hbnum_usertype"));
-				entity.setPortalDonorId(rs.getString("gnum_portal_donor_id"));
-				entity.setIsEraktKosh(rs.getString("hbnum_eraktkosh"));
-				entity.setMobileno(rs.getString("hbstr_mobile_no"));
-				entity.setEdonorEmail(rs.getString("hbstr_email_id"));
-				entity.setBase64Image(rs.getString("hbstr_image_string"));
-				entity.setLastLoginAttemptCounter(rs.getString("hbnum_login_attempt"));
-				entity.setLastLoginAttemptDate(rs.getString("hbnum_login_attempt_date"));
-				entity.setSourceRefNo(rs.getString("hbnum_donor_ref_no"));
-				entity.setHealthId(rs.getString("hbstr_health_id"));
-				entity.setDonorPass(rs.getString("hbstr_password"));
-				entity.setHealthId(rs.getString("hbnum_healthid_number"));
-				entity.setEdonorStateName(rs.getString("edonorStateName"));
-				entity.setEdonorDistName(rs.getString("edonorDistName"));
-				entity.setLgd_state_code(rs.getString("lgd_state_code"));
-				entity.setLgd_district_code(rs.getString("lgd_district_code"));
+	public PortalLoginEntity fetchDonorDetails(String mobileNo) {
+	    try {
+	        String query = queryLoader.getQuery("query.SELECT.DONOR_DETAILS");
 
-				entity.setisValidCredentails(true);
+	        return jdbcTemplate.queryForObject(query, new Object[]{mobileNo}, (rs, rowNum) -> {
+	            PortalLoginEntity entity = new PortalLoginEntity();
+	            entity.setEdonorFName(rs.getString("hbstr_fname"));
+	            entity.setEdonorLName(rs.getString("hbstr_lname"));
+	            entity.setBloodGroup(rs.getString("hbnum_bldgrp_code"));
+	            entity.setIsLastLogin(rs.getString("hbdt_lastlogin"));
+	            entity.setIsFirstLogin(rs.getString("hbnum_firstlogin"));
+	            entity.setUserType(rs.getString("hbnum_usertype"));
+	            entity.setPortalDonorId(rs.getString("gnum_portal_donor_id"));
+	            entity.setIsEraktKosh(rs.getString("hbnum_eraktkosh"));
+	            entity.setMobileno(rs.getString("hbstr_mobile_no"));
+	            entity.setEdonorEmail(rs.getString("hbstr_email_id"));
+	            entity.setBase64Image(rs.getString("hbstr_image_string"));
+	            entity.setLastLoginAttemptCounter(rs.getString("hbnum_login_attempt"));
+	            entity.setLastLoginAttemptDate(rs.getString("hbnum_login_attempt_date"));
+	            entity.setSourceRefNo(rs.getString("hbnum_donor_ref_no"));
+	            entity.setHealthId(rs.getString("hbstr_health_id"));
+	            entity.setDonorPass(rs.getString("hbstr_password"));
+	            entity.setHealthId(rs.getString("hbnum_healthid_number"));
+	            entity.setEdonorStateName(rs.getString("edonorStateName"));
+	            entity.setEdonorDistName(rs.getString("edonorDistName"));
+	            entity.setLgd_state_code(rs.getString("lgd_state_code"));
+	            entity.setLgd_district_code(rs.getString("lgd_district_code"));
+	            entity.setisValidCredentails(true);
 
-				entity=	fetchManageProfileDetails(MobileNo, rs.getString("hbstr_password"));
-				
-				
-				//Save last login timestamp
-				try {
-				String udateQuery = queryLoader.getQuery("query.UPDATE.LAST.LOGIN.TIMESTAMP");
-				int rowsUpdated=jdbcTemplate.update(udateQuery, entity.getMobileno(), entity.getDonorPass());
-				
-				if(rowsUpdated>0) {
-					System.out.println("Last login updated");
-				}
-				else {
-					System.out.println("Not updated");
-				}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-					// TODO: handle exception
-				}
-				return entity;
-			});
-		} catch (EmptyResultDataAccessException e) {
-			logger.info("No results found for mobile number: {}", portalLoginVo.getMobileno());
-			return null;
-		} catch (Exception e) {
-			logger.error("Error executing query", e);
-			return null;
-		}
+	            // Fetch additional profile details if necessary
+	            entity = fetchManageProfileDetails(mobileNo, rs.getString("hbstr_password"));
+
+	            return entity;
+	        });
+	    } catch (EmptyResultDataAccessException e) {
+	        logger.info("No results found for mobile number: {}", mobileNo);
+	        return null;
+	    } catch (Exception e) {
+	        logger.error("Error executing query", e);
+	        return null;
+	    }
+	}
+
+	/**
+	 * Updates the last login timestamp.
+	 */
+	public void updateLastLoginTimestamp(String mobileNo, String password) {
+	    try {
+	        String updateQuery = queryLoader.getQuery("query.UPDATE.LAST.LOGIN.TIMESTAMP");
+	        int rowsUpdated = jdbcTemplate.update(updateQuery, mobileNo, password);
+
+	        if (rowsUpdated > 0) {
+	            System.out.println("Last login updated successfully");
+	        } else {
+	            System.out.println("No rows updated for last login timestamp");
+	        }
+	    } catch (Exception e) {
+	        logger.error("Error updating last login timestamp", e);
+	    }
 	}
 
 	@SuppressWarnings("deprecation")
@@ -249,7 +249,7 @@ public class EraktkoshPortalLoginRepository {
         System.out.println("HNo: " + portalLoginEntity.getHno());
         System.out.println("address: " + portalLoginEntity.getAddress());
         System.out.println("Location: " + portalLoginEntity.getLocation());
-        System.out.println("city: " + portalLoginEntity.getEdonorCity());
+        System.out.println("city: " + portalLoginEntity.getDonorCity());
         System.out.println("district: " + portalLoginEntity.getEdonorDistName());
         System.out.println("state: " + portalLoginEntity.getEdonorStateName());
         System.out.println("PinCode: " + portalLoginEntity.getDonorPin());
@@ -272,7 +272,7 @@ public class EraktkoshPortalLoginRepository {
             ps.setString(12, portalLoginEntity.getHno()); 
             ps.setString(13, portalLoginEntity.getAddress()); 
             ps.setString(14, portalLoginEntity.getLocation()); 
-            ps.setString(15, portalLoginEntity.getEdonorCity());                 
+            ps.setString(15, portalLoginEntity.getDonorCity());                 
             ps.setString(16, portalLoginEntity.getEdonorDistName());                 
             ps.setString(17, portalLoginEntity.getEdonorStateName());                 
             ps.setString(18, portalLoginEntity.getDonorPin()); 
