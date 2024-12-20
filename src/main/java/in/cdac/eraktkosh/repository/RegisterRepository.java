@@ -1,5 +1,5 @@
 package in.cdac.eraktkosh.repository;
 
-public interface Repo {
+public class RegisterRepository {
 
 }

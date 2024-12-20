@@ -226,7 +226,7 @@ public class PortalLoginService {
 
 	    // Retrieve stored OTP and CAPTCHA from Hazelcast
 	    String storedOtp = otpMap.get(mobileno);
-	    String storedCaptcha = captchaMap.get(mobileno); // Ensure correct key is used for CAPTCHA retrieval
+	    String storedCaptcha = captchaMap.get(captcha); // Ensure correct key is used for CAPTCHA retrieval
 
 	    // Validate OTP
 	    if (storedOtp == null) {
@@ -243,6 +243,9 @@ public class PortalLoginService {
 	    if (!storedCaptcha.equals(captcha)) {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid CAPTCHA.");
 	    }
+	    
+	    
+	    
 
 	    // Fetch user details after successful validation
 	    ResponseEntity<?> userDetails = fetchUserDetails(mobileno);
