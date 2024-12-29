@@ -56,7 +56,6 @@ public class PortalLoginService {
 		try {
 			// Check if the user exists
 			boolean userExists = isUserExists(mobile_no);
-//	        String userNotExistMessage = "If you are a Registered User, you will get an OTP.";
 
 			if (!userExists) {
 				finalResponse.put("eRaktkosh", false);
