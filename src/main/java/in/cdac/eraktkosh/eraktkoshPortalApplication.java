@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppDemoApplication {
+public class eraktkoshPortalApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AppDemoApplication.class, args);
+		SpringApplication.run(eraktkoshPortalApplication.class, args);
 	}
 
 }

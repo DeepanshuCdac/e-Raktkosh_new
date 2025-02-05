@@ -15,46 +15,38 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class stateRepository {
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcCall simpleJdbcCall;
+	private JdbcTemplate jdbcTemplate;
+	private SimpleJdbcCall simpleJdbcCall;
 
-    @Autowired
-    public stateRepository(JdbcTemplate jdbcTemplate) {
-    	   this.jdbcTemplate = jdbcTemplate;
+	@Autowired
+	public stateRepository(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 
-           this.simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                   .withSchemaName("pkg_bloodbank_mst") 
-                   .withProcedureName("proc_bbpublic_state") 
-                   .declareParameters(
-                       new SqlParameter("countrycode", Types.VARCHAR),
-                       new SqlParameter("hcode", Types.NUMERIC),       
-                       new SqlParameter("eraktkoshenabled", Types.VARCHAR),
-                       new SqlOutParameter("err", Types.VARCHAR),     
-                       new SqlOutParameter("resultSet", Types.REF_CURSOR) 
-                   )
-                   .withoutProcedureColumnMetaDataAccess(); 
-       }
+		this.simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate).withSchemaName("pkg_bloodbank_mst")
+				.withProcedureName("proc_bbpublic_state")
+				.declareParameters(new SqlParameter("countrycode", Types.VARCHAR),
+						new SqlParameter("hcode", Types.NUMERIC), new SqlParameter("eraktkoshenabled", Types.VARCHAR),
+						new SqlOutParameter("err", Types.VARCHAR), new SqlOutParameter("resultSet", Types.REF_CURSOR))
+				.withoutProcedureColumnMetaDataAccess();
+	}
 
-     
-       public Map<String, Object> getStates(String countryCode, String eraktkoshEnabled) {
-           
-           Map<String, Object> inputParams = new HashMap<>();
-           inputParams.put("countrycode", countryCode);
-           inputParams.put("hcode", 96101); 
-           inputParams.put("eraktkoshenabled", eraktkoshEnabled);
-           inputParams.put("err", "");
-           inputParams.put("resultSet", "");
+	public Map<String, Object> getStates(String countryCode, String eraktkoshEnabled) {
 
-           try {
-               Map<String, Object> result = simpleJdbcCall.execute(inputParams);
+		Map<String, Object> inputParams = new HashMap<>();
+		inputParams.put("countrycode", countryCode);
+		inputParams.put("hcode", 96101);
+		inputParams.put("eraktkoshenabled", eraktkoshEnabled);
+		inputParams.put("err", "");
+		inputParams.put("resultSet", "");
 
-               
-               ResultSet resultSet = (ResultSet) result.get("resultSet");
+		try {
+			Map<String, Object> result = simpleJdbcCall.execute(inputParams);
 
-               
-               return result;
-           } catch (Exception error) {
-               throw new RuntimeException("Error fetching state data: " + error.getMessage(), error);
-           }
-       }
+			ResultSet resultSet = (ResultSet) result.get("resultSet");
+
+			return result;
+		} catch (Exception error) {
+			throw new RuntimeException("Error fetching state data: " + error.getMessage(), error);
+		}
+	}
 }

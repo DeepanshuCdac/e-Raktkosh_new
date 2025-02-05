@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/users")
 public class HomeController {
-	
-	
+
 	@GetMapping
 	public String getMessage() {
 
@@ -29,11 +28,11 @@ public class HomeController {
 		System.out.println(name);
 		return address;
 	}
-	
-	  @GetMapping("/deepanshu")
-	    public String hello() {
-	    	return "hiii deepanshu";
-			
-		}
+
+	@GetMapping("/deepanshu")
+	public String hello() {
+		return "hiii deepanshu";
+
+	}
 
 }

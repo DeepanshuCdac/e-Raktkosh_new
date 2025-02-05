@@ -9,6 +9,6 @@ public class ServletInitializer extends SpringBootServletInitializer {
 	@Override
 	@Bean
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(AppDemoApplication.class);
+		return application.sources(eraktkoshPortalApplication.class);
 	}
 }

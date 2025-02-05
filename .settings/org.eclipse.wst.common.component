@@ -2,7 +2,7 @@
                 
     
     
-    <wb-module deploy-name="eRaktkosh-0.0.1-SNAPSHOT">
+    <wb-module deploy-name="eraktkoshPortal">
                                 
         
         
@@ -25,8 +25,8 @@
                                 
         
         
-        <property name="java-output-path" value="/eraktKoshAPI/build/classes"/>
-        <property name="context-root" value="eRaktkosh"/>
+        <property name="java-output-path" value="/eraktkoshPortal/build/classes"/>
+        <property name="context-root" value="eraktkoshPortal"/>
                             
     
     

@@ -22,6 +22,5 @@ public class State {
 	public void setStateName(String stateName) {
 		this.stateName = stateName;
 	}
-	
 
 }

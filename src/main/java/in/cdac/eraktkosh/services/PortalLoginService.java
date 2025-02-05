@@ -32,14 +32,14 @@ import in.cdac.eraktkosh.utility.SendMessageToUser;
 @Service
 public class PortalLoginService {
 //	@Autowired
-	//import com.hazelcast.core.HazelcastInstance;
+	// import com.hazelcast.core.HazelcastInstance;
 
 	@Autowired
 	EraktkoshPortalLoginRepository portalDonorRepository;
 
 	@Autowired
 	HttpSession session;
-	
+
 	@Autowired
 	private HazelcastInstance hazelcastInstance;
 
@@ -280,17 +280,16 @@ public class PortalLoginService {
 					.body("Error fetching previous donation details.");
 		}
 	}
-	
-	
+
 //	update donor details in manage profile section....
 	public boolean updateOrInsertDonorDetails(PortalLoginEntity portalLoginEntity) throws Exception {
-        try {
+		try {
 //        	System.out.println("bada sheer::"+portalLoginEntity.getEdonorFName());
-        	portalDonorRepository.updateDonorDetails(portalLoginEntity);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error updating or inserting donor details: " + e.getMessage());
-            throw e; 
-        }
-    }
+			portalDonorRepository.updateDonorDetails(portalLoginEntity);
+			return true;
+		} catch (Exception e) {
+			System.err.println("Error updating or inserting donor details: " + e.getMessage());
+			throw e;
+		}
+	}
 }

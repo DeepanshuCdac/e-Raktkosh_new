@@ -2,9 +2,7 @@ package in.cdac.eraktkosh.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +37,9 @@ public class EraktkoshPortalLoginRepository {
 
 	// to find all the query from the property file
 	public EraktkoshPortalLoginRepository() {
-		queryLoader = new QueryLoader("query.properties"); 
+		queryLoader = new QueryLoader("query.properties");
 	}
 	// end
-
 
 	@SuppressWarnings("deprecation")
 	public boolean getPortalDonorDtlByMobileNo(String mobileNo) {
@@ -54,7 +51,7 @@ public class EraktkoshPortalLoginRepository {
 
 			logger.info("Returning the result for : {}", mobileNo + results.toString());
 			if (results.isEmpty()) {
-				hasFlag = false; 
+				hasFlag = false;
 			}
 
 			else {
@@ -72,9 +69,9 @@ public class EraktkoshPortalLoginRepository {
 	public PortalLoginEntity fetchdetailsCamp(PortalLoginEntity portalLoginVo) {
 
 		try {
-			
-			 String query = queryLoader.getQuery("query.SELECT_CAMP_DONOR_DETAIL");
-			 
+
+			String query = queryLoader.getQuery("query.SELECT_CAMP_DONOR_DETAIL");
+
 			return jdbcTemplate.queryForObject(query, new Object[] { portalLoginVo.getMobileno() }, (rs, rowNum) -> {
 				PortalLoginEntity entity = new PortalLoginEntity();
 				boolean hasFlag = true;
@@ -102,11 +99,11 @@ public class EraktkoshPortalLoginRepository {
 	@SuppressWarnings("deprecation")
 	public PortalLoginEntity fetchDonorDetails(String MobileNo) {
 		try {
-			
-			 String query = queryLoader.getQuery("query.SELECT.DONOR_DETAILS");
-			 
+
+			String query = queryLoader.getQuery("query.SELECT.DONOR_DETAILS");
+
 			return jdbcTemplate.queryForObject(query, new Object[] { MobileNo }, (rs, rowNum) -> {
-				PortalLoginEntity entity = new PortalLoginEntity();			
+				PortalLoginEntity entity = new PortalLoginEntity();
 				entity.setEdonorFName(rs.getString("hbstr_fname"));
 				entity.setEdonorLName(rs.getString("hbstr_lname"));
 				entity.setBloodGroup(rs.getString("hbnum_bldgrp_code"));
@@ -131,7 +128,7 @@ public class EraktkoshPortalLoginRepository {
 
 				entity.setisValidCredentails(true);
 
-				entity=	fetchManageProfileDetails(MobileNo, rs.getString("hbstr_password"));
+				entity = fetchManageProfileDetails(MobileNo, rs.getString("hbstr_password"));
 				return entity;
 			});
 		} catch (EmptyResultDataAccessException e) {
@@ -147,7 +144,7 @@ public class EraktkoshPortalLoginRepository {
 	public List<PortalLoginEntity> getPrevDonationDetailsByMobile(String mobileNo) {
 		try {
 			String query = queryLoader.getQuery("query.PREV_DONATION_DETAIL_QUERY");
-			
+
 			logger.info("Fetching previous donation details for mobile number: {}", mobileNo);
 			return jdbcTemplate.query(query,
 					new Object[] { mobileNo, mobileNo, mobileNo, mobileNo, mobileNo, mobileNo }, (rs, rowNum) -> {
@@ -212,108 +209,106 @@ public class EraktkoshPortalLoginRepository {
 		}
 		return timeStamp;
 	}
-	
-	
+
 //	update donor details in manage profile section...
 	public void updateDonorDetails(PortalLoginEntity portalLoginEntity) {
-        String query = queryLoader.getQuery("query.INSERT.DONOR.DETAILS");
-        System.out.println("First Name: " + portalLoginEntity.getEdonorFName());
-        System.out.println("Last Name: " + portalLoginEntity.getEdonorLName());
-        System.out.println("dob: " + portalLoginEntity.getDob());
-        System.out.println("gender: " + portalLoginEntity.getGender());
-        System.out.println("Email: " + portalLoginEntity.getEdonorEmail());
-        System.out.println("bldgroup: " + portalLoginEntity.getBloodGroupName());
-        System.out.println("father: " + portalLoginEntity.getFatherName());
-        System.out.println("marriage: " + portalLoginEntity.getMaritalStatus());
-        System.out.println("Spouse: " + portalLoginEntity.getSpouce());
-        System.out.println("occupation: " + portalLoginEntity.getOccupation());
-        System.out.println("religion: " + portalLoginEntity.getReligion());
-        System.out.println("HNo: " + portalLoginEntity.getHno());
-        System.out.println("address: " + portalLoginEntity.getAddress());
-        System.out.println("Location: " + portalLoginEntity.getLocation());
-        System.out.println("city: " + portalLoginEntity.getEdonorCity());
-        System.out.println("district: " + portalLoginEntity.getEdonorDistName());
-        System.out.println("state: " + portalLoginEntity.getEdonorStateName());
-        System.out.println("PinCode: " + portalLoginEntity.getDonorPin());
-        System.out.println("Landmark: " + portalLoginEntity.getLandmark());
-        System.out.println("Donor ID: " + portalLoginEntity.getPortalDonorId());
-        System.out.println("Password: " + portalLoginEntity.getEdonorPass());
+		String query = queryLoader.getQuery("query.INSERT.DONOR.DETAILS");
+		System.out.println("First Name: " + portalLoginEntity.getEdonorFName());
+		System.out.println("Last Name: " + portalLoginEntity.getEdonorLName());
+		System.out.println("dob: " + portalLoginEntity.getDob());
+		System.out.println("gender: " + portalLoginEntity.getGender());
+		System.out.println("Email: " + portalLoginEntity.getEdonorEmail());
+		System.out.println("bldgroup: " + portalLoginEntity.getBloodGroupName());
+		System.out.println("father: " + portalLoginEntity.getFatherName());
+		System.out.println("marriage: " + portalLoginEntity.getMaritalStatus());
+		System.out.println("Spouse: " + portalLoginEntity.getSpouce());
+		System.out.println("occupation: " + portalLoginEntity.getOccupation());
+		System.out.println("religion: " + portalLoginEntity.getReligion());
+		System.out.println("HNo: " + portalLoginEntity.getHno());
+		System.out.println("address: " + portalLoginEntity.getAddress());
+		System.out.println("Location: " + portalLoginEntity.getLocation());
+		System.out.println("city: " + portalLoginEntity.getEdonorCity());
+		System.out.println("district: " + portalLoginEntity.getEdonorDistName());
+		System.out.println("state: " + portalLoginEntity.getEdonorStateName());
+		System.out.println("PinCode: " + portalLoginEntity.getDonorPin());
+		System.out.println("Landmark: " + portalLoginEntity.getLandmark());
+		System.out.println("Donor ID: " + portalLoginEntity.getPortalDonorId());
+		System.out.println("Password: " + portalLoginEntity.getEdonorPass());
 
-        jdbcTemplate.update(query, ps -> {
-            ps.setString(1, portalLoginEntity.getEdonorFName());             
-            ps.setString(2, portalLoginEntity.getEdonorLName()); 
-            ps.setString(3, portalLoginEntity.getDob());
-            ps.setString(4, portalLoginEntity.getGender());
-            ps.setString(5, portalLoginEntity.getEdonorEmail()); 
-            ps.setString(6, portalLoginEntity.getBloodGroupName()); 
-            ps.setString(7, portalLoginEntity.getFatherName()); 
-            ps.setString(8, portalLoginEntity.getMaritalStatus()); 
-            ps.setString(9, portalLoginEntity.getSpouce()); 
-            ps.setString(10, portalLoginEntity.getOccupation());  
-            ps.setString(11, portalLoginEntity.getReligion());  
-            ps.setString(12, portalLoginEntity.getHno()); 
-            ps.setString(13, portalLoginEntity.getAddress()); 
-            ps.setString(14, portalLoginEntity.getLocation()); 
-            ps.setString(15, portalLoginEntity.getEdonorCity());                 
-            ps.setString(16, portalLoginEntity.getEdonorDistName());                 
-            ps.setString(17, portalLoginEntity.getEdonorStateName());                 
-            ps.setString(18, portalLoginEntity.getDonorPin()); 
-            ps.setString(19, portalLoginEntity.getLandmark()); 
-            ps.setString(20, portalLoginEntity.getPortalDonorId());              
-            ps.setString(21, portalLoginEntity.getEdonorPass());     
-            
-        });
+		jdbcTemplate.update(query, ps -> {
+			ps.setString(1, portalLoginEntity.getEdonorFName());
+			ps.setString(2, portalLoginEntity.getEdonorLName());
+			ps.setString(3, portalLoginEntity.getDob());
+			ps.setString(4, portalLoginEntity.getGender());
+			ps.setString(5, portalLoginEntity.getEdonorEmail());
+			ps.setString(6, portalLoginEntity.getBloodGroupName());
+			ps.setString(7, portalLoginEntity.getFatherName());
+			ps.setString(8, portalLoginEntity.getMaritalStatus());
+			ps.setString(9, portalLoginEntity.getSpouce());
+			ps.setString(10, portalLoginEntity.getOccupation());
+			ps.setString(11, portalLoginEntity.getReligion());
+			ps.setString(12, portalLoginEntity.getHno());
+			ps.setString(13, portalLoginEntity.getAddress());
+			ps.setString(14, portalLoginEntity.getLocation());
+			ps.setString(15, portalLoginEntity.getEdonorCity());
+			ps.setString(16, portalLoginEntity.getEdonorDistName());
+			ps.setString(17, portalLoginEntity.getEdonorStateName());
+			ps.setString(18, portalLoginEntity.getDonorPin());
+			ps.setString(19, portalLoginEntity.getLandmark());
+			ps.setString(20, portalLoginEntity.getPortalDonorId());
+			ps.setString(21, portalLoginEntity.getEdonorPass());
+
+		});
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public PortalLoginEntity fetchManageProfileDetails(String mobileNo, String password) {
-	    try {
-	    	
-	        String query = queryLoader.getQuery("query.SELECT.DONOR_PORTAL_LOGIN_DETAILS");
-	        
-	        return jdbcTemplate.queryForObject(query, new Object[] { mobileNo, password }, (rs, rowNum) -> {
-	            PortalLoginEntity entity = new PortalLoginEntity();
-	            
-	            entity.setEdonorFName(rs.getString("hbstr_fname"));
-	            entity.setEdonorLName(rs.getString("hbstr_lname"));
-	            entity.setBloodGroup(rs.getString("hbnum_bldgrp_code"));
-	            entity.setIsLastLogin(rs.getString("hbdt_lastlogin"));
-	            entity.setIsFirstLogin(rs.getString("hbnum_firstlogin"));
-	            entity.setUserType(rs.getString("hbnum_usertype"));
-	            entity.setMobileno(rs.getString("hbstr_mobile_no"));
-	            entity.setGender(rs.getString("gnum_gender_code"));
-	            entity.setBloodGroupName(rs.getString("hbnum_bldgrp_code"));
-	            
-	            
-	            entity.setEdonorEmail(rs.getString("hbstr_email_id"));
-	            entity.setEdonorStateName(rs.getString("gnum_state_code"));
-	            entity.setEdonorDistName(rs.getString("gnum_district_code"));
-	            entity.setDob(rs.getString("hbdt_dob"));
-	            entity.setDonorPass(password);  
-	            
-	            entity.setFatherName(rs.getString("hbstr_father_name"));
-	            entity.setOccupation(rs.getString("gnum_occupation_code"));
-	            entity.setReligion(rs.getString("gnum_religion_code"));
-	            entity.setMaritalStatus(rs.getString("gnum_marital_status_code"));
-	            entity.setSpouce(rs.getString("hbstr_spouse_name"));
-	            entity.setDonorCity(rs.getString("hbstr_city"));
+		try {
+
+			String query = queryLoader.getQuery("query.SELECT.DONOR_PORTAL_LOGIN_DETAILS");
+
+			return jdbcTemplate.queryForObject(query, new Object[] { mobileNo, password }, (rs, rowNum) -> {
+				PortalLoginEntity entity = new PortalLoginEntity();
+
+				entity.setEdonorFName(rs.getString("hbstr_fname"));
+				entity.setEdonorLName(rs.getString("hbstr_lname"));
+				entity.setBloodGroup(rs.getString("hbnum_bldgrp_code"));
+				entity.setIsLastLogin(rs.getString("hbdt_lastlogin"));
+				entity.setIsFirstLogin(rs.getString("hbnum_firstlogin"));
+				entity.setUserType(rs.getString("hbnum_usertype"));
+				entity.setMobileno(rs.getString("hbstr_mobile_no"));
+				entity.setGender(rs.getString("gnum_gender_code"));
+				entity.setBloodGroupName(rs.getString("hbnum_bldgrp_code"));
+
+				entity.setEdonorEmail(rs.getString("hbstr_email_id"));
+				entity.setEdonorStateName(rs.getString("gnum_state_code"));
+				entity.setEdonorDistName(rs.getString("gnum_district_code"));
+				entity.setDob(rs.getString("hbdt_dob"));
+				entity.setDonorPass(password);
+
+				entity.setFatherName(rs.getString("hbstr_father_name"));
+				entity.setOccupation(rs.getString("gnum_occupation_code"));
+				entity.setReligion(rs.getString("gnum_religion_code"));
+				entity.setMaritalStatus(rs.getString("gnum_marital_status_code"));
+				entity.setSpouce(rs.getString("hbstr_spouse_name"));
+				entity.setDonorCity(rs.getString("hbstr_city"));
 //	            entity.setEdonorCity(rs.getString("hbstr_city"));
-	            entity.setAddress(rs.getString("hbstr_addr1"));
-	           entity.setLocation(rs.getString("hbstr_city_location"));
-	            entity.setHno(rs.getString("hbstr_houesno"));
-	            entity.setLandmark(rs.getString("hbstr_landmark"));
-	            entity.setDonorPin(rs.getString("hbnum_pincode"));
-	            
-	            entity.setisValidCredentails(true);
-	            return entity;
-	        });
-	    } catch (EmptyResultDataAccessException e) {
-	        logger.info("No results found for mobile number: {}", mobileNo);
-	        return null;
-	    } catch (Exception e) {
-	        logger.error("Error executing query", e);
-	        return null;
-	    }
+				entity.setAddress(rs.getString("hbstr_addr1"));
+				entity.setLocation(rs.getString("hbstr_city_location"));
+				entity.setHno(rs.getString("hbstr_houesno"));
+				entity.setLandmark(rs.getString("hbstr_landmark"));
+				entity.setDonorPin(rs.getString("hbnum_pincode"));
+
+				entity.setisValidCredentails(true);
+				return entity;
+			});
+		} catch (EmptyResultDataAccessException e) {
+			logger.info("No results found for mobile number: {}", mobileNo);
+			return null;
+		} catch (Exception e) {
+			logger.error("Error executing query", e);
+			return null;
+		}
 	}
 
 }

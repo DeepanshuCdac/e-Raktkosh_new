@@ -158,26 +158,24 @@ public class PortalLoginController {
 		}
 		return portalLoginService.fetchPreviousDonationDetails(mobileno);
 	}
-	
-	
 
 //	7. endpoint for updating donor details in manage profile section...
 	@PostMapping("/updateOrInsertDonorDetails")
-    public ResponseEntity<?> updateOrInsertDonorDetails(@RequestBody PortalLoginEntity portalLoginEntity) {
-        try {
-        	
-            boolean isSuccess = portalLoginService.updateOrInsertDonorDetails(portalLoginEntity);
+	public ResponseEntity<?> updateOrInsertDonorDetails(@RequestBody PortalLoginEntity portalLoginEntity) {
+		try {
 
-            if (isSuccess) {
-                return ResponseEntity.ok("Donor details updated or inserted successfully.");
-             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Failed to update or insert donor details.");
-            }
-        } catch (Exception e) {
-            // Handle exceptions and return an error response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while processing the request: " + e.getMessage());
-        }
-    }
+			boolean isSuccess = portalLoginService.updateOrInsertDonorDetails(portalLoginEntity);
+
+			if (isSuccess) {
+				return ResponseEntity.ok("Donor details updated or inserted successfully.");
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+						.body("Failed to update or insert donor details.");
+			}
+		} catch (Exception e) {
+			// Handle exceptions and return an error response
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("An error occurred while processing the request: " + e.getMessage());
+		}
+	}
 }
