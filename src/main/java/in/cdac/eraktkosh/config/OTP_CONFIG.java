@@ -12,8 +12,8 @@ public class OTP_CONFIG {
 	@Bean
 	public Config hazelCastConfig() {
 
-		return new Config().setInstanceName("hazelcast-instance")
-				.addMapConfig(new MapConfig().setName("captchaCache").setTimeToLiveSeconds(300)) // TTL for 5 minutes
-				.addMapConfig(new MapConfig().setName("otpCache").setTimeToLiveSeconds(300)); // TTL for 5 minutes
+		return new Config().setInstanceName("hazelcast-instanceUnique")
+				.addMapConfig(new MapConfig().setName("captchaCache").setTimeToLiveSeconds(300)) 
+				.addMapConfig(new MapConfig().setName("otpCache").setTimeToLiveSeconds(300)); 
 	}
 }
