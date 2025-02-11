@@ -22,10 +22,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 
+import in.cdac.eraktkosh.config.OTP_CONFIG;
+import in.cdac.eraktkosh.dto.UserWithTokenResponse;
 import in.cdac.eraktkosh.entity.PortalLoginEntity;
+import in.cdac.eraktkosh.provider.JwtTokenProvider;
 import in.cdac.eraktkosh.repository.EraktkoshPortalLoginRepository;
 import in.cdac.eraktkosh.utility.SendMessageToUser;
 
@@ -40,10 +42,17 @@ public class PortalLoginService {
 	@Autowired
 	HttpSession session;
 
-	@Autowired
-	private HazelcastInstance hazelcastInstance;
+//	@Autowired
+//	private HazelcastInstance hazelcastInstance;
 
-	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes
+	@Autowired
+	private OTP_CONFIG otp_config;
+
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+
+	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes * 60 * 1000
+	private static final int Haze_OTP_EXPIRATION_TIME = 5; // 5 minutes * 60 * 1000
 	private static final int OTP_LENGTH = 6; // Length of the OTP
 	private static final String OTP_CHARS = "0123456789"; // OTP characters (numbers only)
 	private static final int DAILY_OTP_LIMIT = 5; // Daily OTP limit
@@ -54,7 +63,6 @@ public class PortalLoginService {
 		try {
 			// Check if the user exists
 			boolean userExists = isUserExists(mobile_no);
-//	        String userNotExistMessage = "If you are a Registered User, you will get an OTP.";
 
 			if (!userExists) {
 				finalResponse.put("eRaktkosh", false);
@@ -110,8 +118,8 @@ public class PortalLoginService {
 				SendMessageToUser.SendOTP(msg + otp + ". Please do not share your OTP with anyone.", mobile_no);
 
 				// Store OTP in Hazelcast with expiration time
-				IMap<String, String> otpMap = hazelcastInstance.getMap("otpMap");
-				otpMap.put(mobile_no, otp.toString(), OTP_EXPIRATION_TIME, TimeUnit.MINUTES);
+				IMap<String, String> otpMap = otp_config.getHazelcastInstance().getMap("otpMap");
+				otpMap.put(mobile_no, otp.toString(), Haze_OTP_EXPIRATION_TIME, TimeUnit.MINUTES);
 
 				// Build success response
 				finalResponse.put("otp", otp.toString());
@@ -193,7 +201,7 @@ public class PortalLoginService {
 		}
 
 		// Store the captcha in Hazelcast without an expiration time
-		IMap<String, String> captchaMap = hazelcastInstance.getMap("captchaMap");
+		IMap<String, String> captchaMap = otp_config.getHazelcastInstance().getMap("captchaMap");
 
 		captchaMap.put(captchaText.toString(), captchaText.toString());
 
@@ -209,6 +217,12 @@ public class PortalLoginService {
 
 	}
 
+//	public List<PortalLoginEntity> Test() {
+//		System.out.println("Inside test");
+//		List<PortalLoginEntity> res = portalDonorRepository.TestTest();
+//		return res;
+//	}
+
 	public int getPreviousOtpTimestampFromDB(PortalLoginEntity PortalLoginEntity) {
 
 		return 0;
@@ -219,12 +233,12 @@ public class PortalLoginService {
 		System.out.println(session.getId());
 
 		// Get the OTP and CAPTCHA maps from Hazelcast
-		IMap<String, String> otpMap = hazelcastInstance.getMap("otpMap");
-		IMap<String, String> captchaMap = hazelcastInstance.getMap("captchaMap");
+		IMap<String, String> otpMap = otp_config.getHazelcastInstance().getMap("otpMap");
+		IMap<String, String> captchaMap = otp_config.getHazelcastInstance().getMap("captchaMap");
 
 		// Retrieve stored OTP and CAPTCHA from Hazelcast
 		String storedOtp = otpMap.get(mobileno);
-		String storedCaptcha = captchaMap.get(captcha); // Make sure you use the same key to retrieve the CAPTCHA
+		String storedCaptcha = captchaMap.get(captcha); // Ensure correct key is used for CAPTCHA retrieval
 
 		// Validate OTP
 		if (storedOtp == null) {
@@ -242,8 +256,19 @@ public class PortalLoginService {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid CAPTCHA.");
 		}
 
-		// If both OTP and CAPTCHA are valid, fetch user details
-		return fetchUserDetails(mobileno);
+		// Fetch user details after successful validation
+		ResponseEntity<?> userDetails = fetchUserDetails(mobileno);
+
+		// Check if user details are retrieved
+		if (userDetails == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User details not found.");
+		}
+		String token = jwtTokenProvider.generateToken(mobileno);
+
+		UserWithTokenResponse res = new UserWithTokenResponse(userDetails, token);
+
+		// Return the user details
+		return ResponseEntity.ok(res);
 	}
 
 	// New method to fetch user details
@@ -259,6 +284,15 @@ public class PortalLoginService {
 		System.out.println(portalLoginEntity.getEdonorLName());
 		System.out.println(portalLoginEntity.getEdonorFName());
 		System.out.println(portalLoginEntity.getMobileno() + " This is donor Number");
+
+		// Update last login timestamp
+		try {
+			// portalDonorRepository.updateLastLoginTimestamp(mobileno,
+			// portalLoginEntity.getDonorPass());
+		} catch (Exception e) {
+			// logger.error("Error updating last login timestamp", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating last login timestamp.");
+		}
 
 		// Return user details
 		return new ResponseEntity<>(portalLoginEntity, HttpStatus.OK);
