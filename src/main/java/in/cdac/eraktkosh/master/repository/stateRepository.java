@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 public class stateRepository {
 
 	private JdbcTemplate jdbcTemplate;
