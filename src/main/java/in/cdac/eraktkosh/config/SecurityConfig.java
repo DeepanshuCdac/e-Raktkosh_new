@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 * .antMatchers("/auth/welcome/", "/auth/login/**").permitAll()
 				 * .antMatchers("/login", "/register").permitAll()
 				 */
-				 
+
 				.antMatchers("/eraktkosh/fetchDonorDetails", "/eraktkosh/fetchCertificateDetails",
 						"/eraktkosh/updateOrInsertDonorDetails", "/auth/welcome")
 				.authenticated().antMatchers("/**", "/auth/login").permitAll().anyRequest().authenticated())

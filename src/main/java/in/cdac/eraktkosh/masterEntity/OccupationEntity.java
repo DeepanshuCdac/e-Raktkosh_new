@@ -7,24 +7,25 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "gblt_occupation_mst")
 public class OccupationEntity {
-	
+
 	@Id
-	private Integer occupationCode;
+	private String occupationCode;
 	private String occupationName;
-	
-	public Integer getOccupationCode() {
+
+	public String getOccupationCode() {
 		return occupationCode;
 	}
-	public void setOccupationCode(Integer occupationCode) {
+
+	public void setOccupationCode(String occupationCode) {
 		this.occupationCode = occupationCode;
 	}
+
 	public String getOccupationName() {
 		return occupationName;
 	}
+
 	public void setOccupationName(String occupationName) {
 		this.occupationName = occupationName;
 	}
-	
-	
 
 }

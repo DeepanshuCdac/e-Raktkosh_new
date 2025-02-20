@@ -1,3 +1,5 @@
+// in use for all different api's...
+
 package in.cdac.eraktkosh.masterController;
 
 import java.util.List;
@@ -24,72 +26,72 @@ import in.cdac.eraktkosh.masterService.MasterService.ReligionResponse;
 @RestController
 @RequestMapping("/eraktkosh")
 public class MasterController {
-	
+
 	@Autowired
 	private MasterService masterService;
-	
+
 //	Marriage Status Controller -- starts ---
-	 @PostMapping("/marriageStatus")
-	    public MarriageResponse getMaritalStatus() {
-	        return masterService.getAllMaritalStatus();
-	    }
+	@PostMapping("/marriageStatus")
+	public MarriageResponse getMaritalStatus() {
+		return masterService.getAllMaritalStatus();
+	}
 //	 marriage status controller -- ends --
-	 
+
 //	 gender controller -- starts --
-	   @PostMapping("/genders")
-	    public GenderResponse getGenders() {
-	        return masterService.getAllGenders();
-	    }
+	@PostMapping("/genders")
+	public GenderResponse getGenders() {
+		return masterService.getAllGenders();
+	}
 //	  gender controller -- ends --
-	   
+
 //	  occupation controller -- starts --
-	   @PostMapping("/occupations")
-	    public OccupationResponse getOccupation() {
-	        return masterService.getAllOccupation();
-	    }
+	@PostMapping("/occupations")
+	public OccupationResponse getOccupation() {
+		return masterService.getAllOccupation();
+	}
 //	  occupation controller -- ends --
-	   
+
 //		  religion controller -- starts --
-		   @PostMapping("/religion")
-		    public ReligionResponse getReligion() {
-		        return masterService.getAllReligion();
-		    }
+	@PostMapping("/religion")
+	public ReligionResponse getReligion() {
+		return masterService.getAllReligion();
+	}
 //		religion controller -- ends --
-		   
+
 //		BloodGroup controller -- starts --
-			   @PostMapping("/bloodGroup")
-			    public BloodGroupResponse getBloodGroup() {
-			        return masterService.getAllBloodGroup();
-			    }
+	@PostMapping("/bloodGroup")
+	public BloodGroupResponse getBloodGroup() {
+		return masterService.getAllBloodGroup();
+	}
 //		BloodGroup controller -- ends --
-			   
+
 //		componentList controller -- starts --
-			   @PostMapping("/componentList")
-			   public ComponentListResponse getComponentList(@RequestBody Map<String, Integer> request) {
-			       int hospitalCode = request.get("hospitalCode");
-			       return masterService.getAllComponentList(hospitalCode);
-			   }
+	@PostMapping("/componentList")
+	public ComponentListResponse getComponentList(@RequestBody Map<String, Integer> request) {
+		int hospitalCode = request.get("hospitalCode");
+		return masterService.getAllComponentList(hospitalCode);
+	}
 
 //	    componentList controller -- ends --
-	   
+
 //	  state controller -- starts --
-		@PostMapping("/states")
-		public List<State> getStates() {
-	        return masterService.getAllStates(); 
-	    }
+	@PostMapping("/states")
+	public List<State> getStates() {
+		return masterService.getAllStates();
+	}
 //	 state controller -- ends --
-		
+
 //	 districts controller -- starts --
-		 @PostMapping("/districts/{stateCode}")
-		    public List<District> getDistrictsByStateCode(@PathVariable Integer stateCode) {
-		        return masterService.getDistrictsByStateCode(stateCode);
-		    }
+	@PostMapping("/districts/{stateCode}")
+	public List<District> getDistrictsByStateCode(@PathVariable String stateCode) {
+		return masterService.getDistrictsByStateCode(stateCode);
+	}
 //	 districts controller -- ends --
-		 
+
 //		 states-with-districts controller -- starts --	 
-		 @PostMapping("/states-with-districts")
-		    public List<StateWithDistricts> getStatesWithDistricts() {
-		        return masterService.getAllStatesWithDistricts();
-		    }
+	@PostMapping("/states-with-districts")
+	public List<StateWithDistricts> getStatesWithDistricts() {
+		return masterService.getAllStatesWithDistricts();
+	}
 //		 districts controller -- ends --
 }

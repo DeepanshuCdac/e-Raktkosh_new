@@ -33,17 +33,12 @@ import in.cdac.eraktkosh.utility.SendMessageToUser;
 
 @Service
 public class PortalLoginService {
-//	@Autowired
-	// import com.hazelcast.core.HazelcastInstance;
 
 	@Autowired
 	EraktkoshPortalLoginRepository portalDonorRepository;
 
 	@Autowired
 	HttpSession session;
-
-//	@Autowired
-//	private HazelcastInstance hazelcastInstance;
 
 	@Autowired
 	private OTP_CONFIG otp_config;

@@ -1,4 +1,5 @@
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterEntity\MaritalStatusEntity.java
+D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterController\MasterDataController.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\config\OTP_CONFIG.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\services\RegisterService.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\master\entity\State.java
@@ -9,6 +10,7 @@ D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\filter\Jw
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterEntity\OccupationEntity.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\controllers\masterController.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\utility\SMSConfig.java
+D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\controllers\UserRegisterController.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\dto\AuthRequest.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\repository\EraktkoshPortalLoginRepository.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\config\GlobalExceptionHandler.java
@@ -18,6 +20,7 @@ D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\dto\Token
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\master\service\StateService.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\repository\Repo.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\config\WebConfig.java
+D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\entity\TestEntityRegistration.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\master\repository\stateRepository.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\entity\PortalLoginEntity.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterRepository\MasterRepository.java
@@ -29,6 +32,7 @@ D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\config\BB
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterEntity\State.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\entity\RegisterEntity.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\dto\StateWithDistricts.java
+D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\dto\MasterDataResponse.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\controllers\UserController.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\filter\SessionInterceptor.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterEntity\ReligionEntity.java
@@ -37,12 +41,15 @@ D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\repositor
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\dto\UserWithTokenResponse.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\repository\EraktkoshPortalLoginRepository2.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\utility\HOTPAlgorithm.java
+D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\services\UserService.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\entity\State.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\ServletInitializer.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\controllers\Users.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterController\MasterController.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\filter\JwtAuthenticationException.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\eraktkoshPortalApplication.java
+D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterService\MasterDataService.java
+D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\repository\UserRepository.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\services\PortalLoginService.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\provider\JwtTokenProvider.java
 D:\deepanshu_workspace\eraktkoshPortal\src\main\java\in\cdac\eraktkosh\masterEntity\BloodGroupEntity.java

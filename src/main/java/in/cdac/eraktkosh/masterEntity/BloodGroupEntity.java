@@ -7,21 +7,24 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "HBBT_BLDGRP_MST")
 public class BloodGroupEntity {
-	
+
 	@Id
 	private String bloodGroupName;
-	private Integer bloodGroupCode;
-	
+	private String bloodGroupCode;
+
 	public String getBloodGroupName() {
 		return bloodGroupName;
 	}
+
 	public void setBloodGroupName(String bloodGroupName) {
 		this.bloodGroupName = bloodGroupName;
 	}
-	public Integer getBloodGroupCode() {
+
+	public String getBloodGroupCode() {
 		return bloodGroupCode;
 	}
-	public void setBloodGroupCode(Integer bloodGroupCode) {
+
+	public void setBloodGroupCode(String bloodGroupCode) {
 		this.bloodGroupCode = bloodGroupCode;
 	}
 

@@ -1,3 +1,5 @@
+//  in use for state and district combo...
+
 package in.cdac.eraktkosh.dto;
 
 import java.util.List;
@@ -5,39 +7,39 @@ import java.util.List;
 import in.cdac.eraktkosh.masterEntity.District;
 
 public class StateWithDistricts {
-	
-	   private Integer stateCode;
-	    private String stateName;
-	    private List<District> districts;
-	    
-	    public StateWithDistricts(Integer stateCode, String stateName, List<District> districts) {
-	        this.stateCode = stateCode;
-	        this.stateName = stateName;
-	        this.districts = districts;
-	    }
-	    
-	    public Integer getStateCode() {
-	        return stateCode;
-	    }
 
-	    public void setStateCode(Integer stateCode) {
-	        this.stateCode = stateCode;
-	    }
+	private String stateCode;
+	private String stateName;
+	private List<District> districts;
 
-	    public String getStateName() {
-	        return stateName;
-	    }
+	public StateWithDistricts(String stateCode, String stateName, List<District> districts) {
+		this.stateCode = stateCode;
+		this.stateName = stateName;
+		this.districts = districts;
+	}
 
-	    public void setStateName(String stateName) {
-	        this.stateName = stateName;
-	    }
+	public String getStateCode() {
+		return stateCode;
+	}
 
-	    public List<District> getDistricts() {
-	        return districts;
-	    }
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
 
-	    public void setDistricts(List<District> districts) {
-	        this.districts = districts;
-	    }
+	public String getStateName() {
+		return stateName;
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	public List<District> getDistricts() {
+		return districts;
+	}
+
+	public void setDistricts(List<District> districts) {
+		this.districts = districts;
+	}
 
 }

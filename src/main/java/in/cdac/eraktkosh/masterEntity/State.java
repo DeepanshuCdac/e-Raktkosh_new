@@ -7,16 +7,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "GBLT_STATE_MST")
 public class State {
-	
+
 	@Id
-	private int stateCode;
-    private String stateName;
-	
-	public Integer getStateCode() {
+	private String stateCode;
+	private String stateName;
+
+	public String getStateCode() {
 		return stateCode;
 	}
 
-	public void setStateCode(Integer stateCode) {
+	public void setStateCode(String stateCode) {
 		this.stateCode = stateCode;
 	}
 

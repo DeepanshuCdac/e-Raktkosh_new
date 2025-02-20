@@ -33,7 +33,7 @@ public class OTP_CONFIG {
 		// config.setProperty("hazelcast.socket.client.bind.any", "false");
 		// config.setProperty("hazelcast.socket.client.bind.address", "10.226.17.5");
 		config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-		config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).addMember(ip2);// .addMember(ip1);//
+		config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).addMember(ip1);// .addMember(ip1);//
 																								// .setMembers(List.of(ip1,ip2));
 		// uat
 		// config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true).setEnabled(true).addMember(ipuat);

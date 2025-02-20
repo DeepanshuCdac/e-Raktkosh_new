@@ -10,10 +10,4 @@ public class FallBackController {
 	public String redirect() {
 		return "forward:/index.html";
 	}
-
-	/*
-	 * @RequestMapping("/pages/portaldonorAdmin") public String validate() { return
-	 * "forward:/beta#/pages/portaldonorAdmin"; }
-	 */
-
 }
