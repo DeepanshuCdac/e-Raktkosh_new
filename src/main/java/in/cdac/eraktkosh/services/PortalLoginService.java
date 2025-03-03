@@ -46,11 +46,11 @@ public class PortalLoginService {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
-	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000; // 5 minutes * 60 * 1000
-	private static final int Haze_OTP_EXPIRATION_TIME = 5; // 5 minutes * 60 * 1000
-	private static final int OTP_LENGTH = 6; // Length of the OTP
-	private static final String OTP_CHARS = "0123456789"; // OTP characters (numbers only)
-	private static final int DAILY_OTP_LIMIT = 5; // Daily OTP limit
+	private static final int OTP_EXPIRATION_TIME = 5 * 60 * 1000;
+	private static final int Haze_OTP_EXPIRATION_TIME = 5;
+	private static final int OTP_LENGTH = 6;
+	private static final String OTP_CHARS = "0123456789";
+	private static final int DAILY_OTP_LIMIT = 5;
 
 	public String generateOtp(String mobile_no) throws InvalidKeyException, NoSuchAlgorithmException {
 		JSONObject finalResponse = new JSONObject();
@@ -211,12 +211,6 @@ public class PortalLoginService {
 		return res;
 
 	}
-
-//	public List<PortalLoginEntity> Test() {
-//		System.out.println("Inside test");
-//		List<PortalLoginEntity> res = portalDonorRepository.TestTest();
-//		return res;
-//	}
 
 	public int getPreviousOtpTimestampFromDB(PortalLoginEntity PortalLoginEntity) {
 

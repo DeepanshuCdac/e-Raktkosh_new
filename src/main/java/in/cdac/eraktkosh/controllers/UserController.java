@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.cdac.eraktkosh.dto.LoginRegister;
 import in.cdac.eraktkosh.dto.TokenResponse;
 import in.cdac.eraktkosh.provider.JwtTokenProvider;
 import in.cdac.eraktkosh.services.PortalLoginService;
@@ -60,12 +58,11 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public TokenResponse bhavya(@RequestBody LoginRegister lg) {
-		String client_id = lg.getClient_id();
-		String client_secret = lg.getClient_secret();
-		if (!client_id.isEmpty()) { // "admin".equals(username) && "password".equals(password)
+	public TokenResponse bhavya(@RequestParam String lg) {
+
+		if (lg != null) { // "admin".equals(username) && "password".equals(password)
 			// Generate JWT token
-			String token = jwtTokenProvider.generateToken(client_id);
+			String token = jwtTokenProvider.generateToken(lg);
 
 			return new TokenResponse(token);
 		}

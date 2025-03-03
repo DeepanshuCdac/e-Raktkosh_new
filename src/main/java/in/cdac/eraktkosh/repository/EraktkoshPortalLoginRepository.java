@@ -29,11 +29,9 @@ public class EraktkoshPortalLoginRepository {
 
 	private final QueryLoader queryLoader;
 
-	// to find all the query from the property file
 	public EraktkoshPortalLoginRepository() {
 		queryLoader = new QueryLoader("query.properties");
 	}
-	// end
 
 	@SuppressWarnings("deprecation")
 	public boolean getPortalDonorDtlByMobileNo(String mobileNo) {
@@ -122,7 +120,7 @@ public class EraktkoshPortalLoginRepository {
 
 				entity.setisValidCredentails(true);
 
-				entity = fetchManageProfileDetails(MobileNo, rs.getString("hbstr_password"));
+				entity = fetchManageProfileDetails(MobileNo);
 				return entity;
 			});
 		} catch (EmptyResultDataAccessException e) {
@@ -256,12 +254,12 @@ public class EraktkoshPortalLoginRepository {
 	}
 
 	@SuppressWarnings("deprecation")
-	public PortalLoginEntity fetchManageProfileDetails(String mobileNo, String password) {
+	public PortalLoginEntity fetchManageProfileDetails(String mobileNo) {
 		try {
 
 			String query = queryLoader.getQuery("query.SELECT.DONOR_PORTAL_LOGIN_DETAILS");
 
-			return jdbcTemplate.queryForObject(query, new Object[] { mobileNo, password }, (rs, rowNum) -> {
+			return jdbcTemplate.queryForObject(query, new Object[] { mobileNo }, (rs, rowNum) -> {
 				PortalLoginEntity entity = new PortalLoginEntity();
 
 				entity.setEdonorFName(rs.getString("hbstr_fname"));
@@ -278,7 +276,7 @@ public class EraktkoshPortalLoginRepository {
 				entity.setEdonorStateName(rs.getString("gnum_state_code"));
 				entity.setEdonorDistName(rs.getString("gnum_district_code"));
 				entity.setDob(rs.getString("hbdt_dob"));
-				entity.setDonorPass(password);
+//				entity.setDonorPass(password);
 
 				entity.setFatherName(rs.getString("hbstr_father_name"));
 				entity.setOccupation(rs.getString("gnum_occupation_code"));
@@ -286,7 +284,6 @@ public class EraktkoshPortalLoginRepository {
 				entity.setMaritalStatus(rs.getString("gnum_marital_status_code"));
 				entity.setSpouce(rs.getString("hbstr_spouse_name"));
 				entity.setDonorCity(rs.getString("hbstr_city"));
-//	            entity.setEdonorCity(rs.getString("hbstr_city"));
 				entity.setAddress(rs.getString("hbstr_addr1"));
 				entity.setLocation(rs.getString("hbstr_city_location"));
 				entity.setHno(rs.getString("hbstr_houesno"));

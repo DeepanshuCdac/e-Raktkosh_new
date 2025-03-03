@@ -61,18 +61,22 @@ public class UserRegisterRepository {
 
 	public boolean saveUserDetails(Map<String, String> userDetails) {
 		String query = queryLoader.getQuery("query.INSERT.DONOR.DETAILS");
+
 		int result = jdbcTemplate.update(query, userDetails.get("mobileNo"), userDetails.get("firstName"),
-				userDetails.get("lastName"), Integer.parseInt(userDetails.get("bloodGroupCode")),
-				userDetails.get("password"), Integer.parseInt(userDetails.get("firstLogin")),
-				Integer.parseInt(userDetails.get("demographics")), Integer.parseInt(userDetails.get("isValid")),
-				Integer.parseInt(userDetails.get("stateCode")), Integer.parseInt(userDetails.get("districtCode")),
-				Integer.parseInt(userDetails.get("pincode")), userDetails.get("email"),
-				Integer.parseInt(userDetails.get("genderCode")), userDetails.get("userId"), userDetails.get("address"),
-				Integer.parseInt(userDetails.get("allBlood")), Integer.parseInt(userDetails.get("repository")),
-				Integer.parseInt(userDetails.get("registrationMode")), userDetails.get("fatherName"),
-				userDetails.get("dob"));
+				userDetails.get("lastName"), parseInteger(userDetails.get("bloodGroupCode")),
+				userDetails.get("password"), parseInteger(userDetails.get("firstLogin")),
+				parseInteger(userDetails.get("demographics")), parseInteger(userDetails.get("isValid")),
+				parseInteger(userDetails.get("stateCode")), parseInteger(userDetails.get("districtCode")),
+				userDetails.get("pincode"), userDetails.get("emailId"), userDetails.get("genderCode"),
+				userDetails.get("userId"), userDetails.get("address"), parseInteger(userDetails.get("allBlood")),
+				parseInteger(userDetails.get("repository")), parseInteger(userDetails.get("registrationMode")),
+				userDetails.get("fatherName"), userDetails.get("dob"));
 
 		return result > 0;
+	}
+
+	private Integer parseInteger(String value) {
+		return (value != null && !value.isEmpty()) ? Integer.parseInt(value) : null;
 	}
 
 }

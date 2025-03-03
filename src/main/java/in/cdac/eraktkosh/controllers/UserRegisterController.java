@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import in.cdac.eraktkosh.services.UserRegisterService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/eraktkosh")
 public class UserRegisterController {
 
 	private final UserRegisterService userService;
@@ -50,7 +50,6 @@ public class UserRegisterController {
 			ImageIO.write(captchaImage, "png", baos);
 			String base64Captcha = Base64.getEncoder().encodeToString(baos.toByteArray());
 
-			// Prepare response
 			response.put("captchaImage", "data:image/png;base64," + base64Captcha);
 			response.put("captchaText", captchaText);
 
