@@ -15,6 +15,39 @@ public class CampDetailDTO {
 	    private String stateName;
 	    private String districtName;
 	    private String dateToSort;
+	    public CampDetailDTO(String campDate, String campTime, String campName, String campVenue, String contact,
+				String conductedBy, String hospName, Long campReqNo, Integer type, Integer isPortalRegistration,
+				String stateName, String districtName, String dateToSort, Integer districtCode) {
+			super();
+			this.campDate = campDate;
+			this.campTime = campTime;
+			this.campName = campName;
+			this.campVenue = campVenue;
+			this.contact = contact;
+			this.conductedBy = conductedBy;
+			this.hospName = hospName;
+			this.campReqNo = campReqNo;
+			this.type = type;
+			this.isPortalRegistration = isPortalRegistration;
+			this.stateName = stateName;
+			this.districtName = districtName;
+			this.dateToSort = dateToSort;
+			this.districtCode = districtCode;
+		}
+
+		public CampDetailDTO() {
+			super();
+		}
+
+		public Integer getdistrictCode() {
+			return districtCode;
+		}
+
+		public void setdistrictCode(Integer districtCode) {
+			this.districtCode = districtCode;
+		}
+
+		private Integer districtCode;
 	    
 	    public CampDetailDTO(String campDate, String campTime, String campName, String campVenue, String contact, 
                 String conductedBy, String hospName, Long campReqNo, Integer type, Integer isPortalRegistration, 
@@ -34,6 +67,7 @@ this.districtName = districtName;
 this.dateToSort = dateToSort;
 }
 
+// Getters
 public String getCampDate() { return campDate; }
 public String getCampTime() { return campTime; }
 public String getCampName() { return campName; }
@@ -48,6 +82,7 @@ public String getStateName() { return stateName; }
 public String getDistrictName() { return districtName; }
 public String getDateToSort() { return dateToSort; }
 
+// Setters
 public void setCampDate(String campDate) { this.campDate = campDate; }
 public void setCampTime(String campTime) { this.campTime = campTime; }
 public void setCampName(String campName) { this.campName = campName; }
@@ -62,6 +97,7 @@ public void setStateName(String stateName) { this.stateName = stateName; }
 public void setDistrictName(String districtName) { this.districtName = districtName; }
 public void setDateToSort(String dateToSort) { this.dateToSort = dateToSort; }
 
+// toString method
 @Override
 public String toString() {
 return "CampDetailDTO{" +
@@ -79,5 +115,6 @@ return "CampDetailDTO{" +
        ", districtName='" + districtName + '\'' +
        ", dateToSort='" + dateToSort + '\'' +
        '}';
-	}
+}
+
 }

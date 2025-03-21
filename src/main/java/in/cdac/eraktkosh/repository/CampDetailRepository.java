@@ -25,20 +25,24 @@ public class CampDetailRepository {
     }
 
     @SuppressWarnings("deprecation")
-    public List<CampDetailDTO> fetchCamps(int stateCode, Integer districtCode, String campDate) {
+    public List<CampDetailDTO> fetchCamps(int stateCode, Integer districtCode, String startDate, String endDate) {
         String query = queryLoader.getQuery("fetch.blood_donation_camps");
 
-        if (districtCode == null) {
-            districtCode = -1;
+        // Set districtCode default to null instead of -1 for better query handling
+        int finalDistrictCode = (districtCode != null) ? districtCode : 0;
+
+        // Ensure dates are not null
+        if (startDate == null || startDate.isEmpty()) {
+            startDate = java.time.LocalDate.now().toString();
         }
-        if (campDate == null || campDate.isEmpty()) {
-            campDate = java.time.LocalDate.now().toString();
+        if (endDate == null || endDate.isEmpty()) {
+            endDate = java.time.LocalDate.now().toString();
         }
 
         Object[] params = {
-            stateCode, districtCode, districtCode, campDate,  
-            stateCode, districtCode, districtCode, campDate, 
-            stateCode, districtCode, districtCode, campDate   
+        		stateCode, finalDistrictCode, finalDistrictCode,  startDate, endDate , 
+        		stateCode, finalDistrictCode, finalDistrictCode,  startDate, endDate , 
+        		stateCode, finalDistrictCode, finalDistrictCode,  startDate, endDate , 
         };
 
         return jdbcTemplate.query(query, params, new RowMapper<CampDetailDTO>() {

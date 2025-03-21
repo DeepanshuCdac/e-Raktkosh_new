@@ -43,6 +43,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.10.1</version>
+</dependency>
+
         <!-- dependency added for jpa using for third party api call-->
 <!--          <dependency>-->
 <!--        <groupId>org.springframework.boot</groupId>-->

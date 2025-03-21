@@ -11,10 +11,10 @@ import in.cdac.eraktkosh.repository.CampDetailRepository;
 @Service
 public class CampDetailService {
 	
-	@Autowired
+    @Autowired
     private CampDetailRepository campDetailRepository;
 
-    public List<CampDetailDTO> getCamps(int stateCode, Integer districtCode, String campDate) {
-        return campDetailRepository.fetchCamps(stateCode, districtCode, campDate);
+    public List<CampDetailDTO> getCamps(int stateCode, Integer districtCode, String startDate, String endDate) {
+        return campDetailRepository.fetchCamps(stateCode, districtCode, startDate, endDate);
     }
 }
