@@ -35,7 +35,8 @@ public class NotificationRepository {
             rs.getLong("id"),
             rs.getString("title"),
             rs.getInt("isUrl"),
-            rs.getString("docUrl")
+            rs.getString("docUrl"),
+            rs.getDate("startDate")
     );
     
     @SuppressWarnings("deprecation")
@@ -47,7 +48,8 @@ public class NotificationRepository {
                 return Optional.of(new NotificationDataDTO(
                     id,
                     rs.getString("hgstr_notification_title"),
-                    rs.getString("hgstr_notification_data")
+                    rs.getString("hgstr_notification_data"),
+                    rs.getDate("startDate")
                 ));
             }
             return Optional.empty();

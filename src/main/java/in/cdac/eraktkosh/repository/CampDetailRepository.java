@@ -24,14 +24,13 @@ public class CampDetailRepository {
         this.queryLoader = queryLoader;
     }
 
+    // Existing method - Don't touch
     @SuppressWarnings("deprecation")
     public List<CampDetailDTO> fetchCamps(int stateCode, Integer districtCode, String startDate, String endDate) {
         String query = queryLoader.getQuery("fetch.blood_donation_camps");
 
-        // Set districtCode default to null instead of -1 for better query handling
         int finalDistrictCode = (districtCode != null) ? districtCode : 0;
 
-        // Ensure dates are not null
         if (startDate == null || startDate.isEmpty()) {
             startDate = java.time.LocalDate.now().toString();
         }
@@ -40,30 +39,42 @@ public class CampDetailRepository {
         }
 
         Object[] params = {
-        		stateCode, finalDistrictCode, finalDistrictCode,  startDate, endDate , 
-        		stateCode, finalDistrictCode, finalDistrictCode,  startDate, endDate , 
-        		stateCode, finalDistrictCode, finalDistrictCode,  startDate, endDate , 
+            stateCode, finalDistrictCode, finalDistrictCode, startDate, endDate,
+            stateCode, finalDistrictCode, finalDistrictCode, startDate, endDate,
+            stateCode, finalDistrictCode, finalDistrictCode, startDate, endDate
         };
 
-        return jdbcTemplate.query(query, params, new RowMapper<CampDetailDTO>() {
+        return jdbcTemplate.query(query, params, getRowMapper());
+    }
+
+    // New method for camp schedule by hospital code
+    public List<CampDetailDTO> fetchCampScheduleByHospitalCode(Integer hospitalCode) {
+        String query = queryLoader.getQuery("camp.schedule.query");
+
+        return jdbcTemplate.query(query, new Object[] { hospitalCode, hospitalCode, hospitalCode }, getRowMapper());
+    }
+
+    // Reusable RowMapper
+    private RowMapper<CampDetailDTO> getRowMapper() {
+        return new RowMapper<CampDetailDTO>() {
             @Override
             public CampDetailDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new CampDetailDTO(
-                    rs.getString("campdate"),
-                    rs.getString("camptime"),
-                    rs.getString("campname"),
-                    rs.getString("campvenue"),
-                    rs.getString("contact"),
-                    rs.getString("conductedby"),
-                    rs.getString("hospName"),
-                    rs.getLong("camp_reqno"),
-                    rs.getInt("type"),
-                    rs.getInt("is_portalregistration"),
-                    rs.getString("stateName"),
-                    rs.getString("distName"),
-                    rs.getString("dateToSort")
-                );
+                CampDetailDTO dto = new CampDetailDTO();
+                dto.setCampDate(rs.getString("campdate"));
+                dto.setCampTime(rs.getString("camptime"));
+                dto.setCampName(rs.getString("campname"));
+                dto.setCampVenue(rs.getString("campvenue"));
+                dto.setContact(rs.getString("contact"));
+                dto.setConductedBy(rs.getString("conductedby"));
+                dto.setHospName(rs.getString("hospName"));
+                dto.setCampReqNo(rs.getLong("camp_reqno"));
+                dto.setType(rs.getInt("type"));
+                dto.setIsPortalRegistration(rs.getInt("is_portalregistration"));
+                dto.setStateName(rs.getString("stateName"));
+                dto.setDistrictName(rs.getString("distName"));
+                dto.setDateToSort(rs.getString("dateToSort"));
+                return dto;
             }
-        });
+        };
     }
 }

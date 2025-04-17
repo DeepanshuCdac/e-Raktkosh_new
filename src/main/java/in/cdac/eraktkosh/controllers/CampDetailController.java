@@ -39,4 +39,10 @@ public class CampDetailController {
 
         return campDetailService.getCamps(stateCode, districtCode, startDate, endDate);
     }
+    
+    @GetMapping("/hospitalCode")
+    public List<CampDetailDTO> getCampsByHospitalCode(@RequestParam("hospitalCode") Integer hospitalCode) {
+        return campDetailService.getCampsByHospitalCode(hospitalCode);
+    }
+    
 }

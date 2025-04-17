@@ -1,17 +1,21 @@
 package in.cdac.eraktkosh.dto;
 
+import java.sql.Date;
+
 public class NotificationDTO {
 	
 	 	private Long id;
 	    private String title;
 	    private Integer isUrl;
 	    private String docUrl;
+	    private Date startDate;
 
-	    public NotificationDTO(Long id, String title, Integer isUrl, String docUrl) {
+	    public NotificationDTO(Long id, String title, Integer isUrl, String docUrl, Date startDate) {
 	        this.id = id;
 	        this.title = title;
 	        this.isUrl = isUrl;
 	        this.docUrl = docUrl;
+	        this.startDate = startDate;
 	    }
 
 	    public Long getId() {
@@ -44,6 +48,14 @@ public class NotificationDTO {
 
 	    public void setDocUrl(String docUrl) {
 	        this.docUrl = docUrl;
+	    }
+	    
+	    public Date getStartDate() {
+	        return startDate;
+	    }
+
+	    public void setStartDate(Date startDate) {
+	        this.startDate = startDate;
 	    }
 
 }
