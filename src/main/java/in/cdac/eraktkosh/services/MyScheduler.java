@@ -18,8 +18,8 @@ public class MyScheduler {
 	    @Autowired
 	    private EmailService emailService;
 
-	    @Scheduled(fixedRate = 60000) 
-//	    @Scheduled(cron = "0 0 8,20 * * ?")
+//	    @Scheduled(fixedRate = 60000) 
+	    @Scheduled(cron = "0 0 8,20 * * ?")
 	    public void runCampNotificationScheduler() {
 	        List<CampNotificationDTO> campList = repository.getUpcomingCampNotifications();
 

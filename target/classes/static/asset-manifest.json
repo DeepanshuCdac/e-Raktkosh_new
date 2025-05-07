@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.3cbba16a.css",
-    "main.js": "./static/js/main.355da2f0.js",
+    "main.css": "./static/css/main.993c2d88.css",
+    "main.js": "./static/js/main.d6c667f1.js",
     "static/media/donation-wg-bg.png": "./static/media/donation-wg-bg.88550ec97e3e88bbda3e.png",
     "static/media/about-bg.png": "./static/media/about-bg.f87ff418b22ae577122e.png",
     "static/media/SourceSans3-Regular.ttf": "./static/media/SourceSans3-Regular.d5f259bc2699f6304f9a.ttf",
@@ -12,11 +12,12 @@
     "static/media/bg-about-res.png": "./static/media/bg-about-res.d0ff234ccea9c08d89b4.png",
     "static/media/learn-bg.png": "./static/media/learn-bg.6d3d4f70c20443e41b08.png",
     "index.html": "./index.html",
-    "main.3cbba16a.css.map": "./static/css/main.3cbba16a.css.map",
-    "main.355da2f0.js.map": "./static/js/main.355da2f0.js.map"
+    "static/media/calendar.svg": "./static/media/calendar.721af743b1e45a36369b.svg",
+    "main.993c2d88.css.map": "./static/css/main.993c2d88.css.map",
+    "main.d6c667f1.js.map": "./static/js/main.d6c667f1.js.map"
   },
   "entrypoints": [
-    "static/css/main.3cbba16a.css",
-    "static/js/main.355da2f0.js"
+    "static/css/main.993c2d88.css",
+    "static/js/main.d6c667f1.js"
   ]
 }

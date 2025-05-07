@@ -20,6 +20,10 @@ public class DonorResponseRepository {
 	        jdbcTemplate.update(queryLoader.getQuery("update.donor.response.query"),
 	                isResponse, email, campReqNo);
 	    }
+	    
+//	    public void insertEmailLog(String email, String campReqNo) {
+//	        jdbcTemplate.update(queryLoader.getQuery("insert.email.log.entry"), email, campReqNo);
+//	    }
 
 
 }

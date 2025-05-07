@@ -8,7 +8,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import in.cdac.eraktkosh.config.EmailConfig;
+import in.cdac.eraktkosh.dto.BloodAvailabilityDTO;
 import in.cdac.eraktkosh.dto.CampNotificationDTO;
+import in.cdac.eraktkosh.repository.BloodAvailabilityRepository;
 import in.cdac.eraktkosh.repository.SubscribeDonorRepository;
 
 import org.slf4j.Logger;
@@ -16,6 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -34,6 +39,9 @@ public class EmailService {
     @Autowired
     private SubscribeDonorRepository subscribeDonorRepository;
 
+    @Autowired 
+    private BloodAvailabilityRepository bloodAvailabilityRepo;
+//    email template for user those are subscribing themselves for the camp scheduled in their area ....
     public void sendRegistrationEmail(String toEmail, Long serialNo) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -43,8 +51,15 @@ public class EmailService {
             helper.setTo(toEmail);
             helper.setSubject("Welcome to e-Raktkosh - Registration Successful");
             
+            final String localBaseUrl = "http://10.226.25.103:8080";
+            final String uatBaseUrl = "https://uateraktkosh.dcservices.in/beta#/";
+            final String prodBaseUrl = "https://eraktkosh.mohfw.gov.in/eraktkoshPortal/#/";
+            
+        //  Set the active URL base here
+            final String baseUrl = localBaseUrl;
+            
          // Unsubscribe link with serialNo
-            String unsubscribeLink = "http://10.226.25.103:8080/eraktkosh/subscribe/unsubscribe?email=" + toEmail;
+            String unsubscribeLink = baseUrl + "/eraktkosh/subscribe/unsubscribe?email=" + toEmail;
 
             String emailContent = "<html><body>"
                     + "<h2 style='color: #d9534f;'>Dear Donor,</h2>"
@@ -67,6 +82,7 @@ public class EmailService {
         }
     }
     
+//    email template for the user's those are unsubscribing themselves....
     public void sendUnsubscriptionEmail(String toEmail) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -83,6 +99,7 @@ public class EmailService {
         }
     }
     
+//    email template for user those who are registering themselves....
     public void sendReRegistrationEmail(String toEmail, Long serialNo) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -99,6 +116,7 @@ public class EmailService {
         }
     }
     
+//    this is the email template for sneding the notification of camp to the subscribed user....
     public void sendCampNotificationEmail(CampNotificationDTO dto) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -107,6 +125,13 @@ public class EmailService {
             helper.setFrom(emailConfig.getUsername());
             helper.setTo(dto.getEmail());
             helper.setSubject("Upcoming Blood Donation Camp Near You!");
+            
+            final String localBaseUrl = "http://10.226.25.103:8080";
+            final String uatBaseUrl = "https://uateraktkosh.dcservices.in/beta#/";
+            final String prodBaseUrl = "https://eraktkosh.mohfw.gov.in/eraktkoshPortal/#/";
+            
+         //  Set the active URL base here
+            final String baseUrl = localBaseUrl;
 
             String venueFull = dto.getVenueName() + ", " + dto.getVenueCity();
             String encodedVenue = "";
@@ -138,11 +163,11 @@ public class EmailService {
             	    + "</p>"
             	    + "<p>Would you like to join the camp?</p>"
             	    + "<p>"
-            	    + "<a href='http://10.226.25.103:8080/response.html?email=" + dto.getEmail()
+            	    + "<a href='" + baseUrl + "/response.html?email=" + dto.getEmail()
             	    + "&campReqNo=" + dto.getCampReqNo()
             	    + "&isResponse=1' style='text-decoration: none; font-size: 16px;'>"
             	    + "👍 Yes</a>&nbsp;&nbsp;&nbsp;"
-            	    + "<a href='http://10.226.25.103:8080/response.html?email=" + dto.getEmail()
+            	    + "<a href='" + baseUrl + "/response.html?email=" + dto.getEmail()
             	    + "&campReqNo=" + dto.getCampReqNo()
             	    + "&isResponse=0' style='text-decoration: none; font-size: 16px;'>"
             	    + "👎 No</a>"
@@ -157,10 +182,78 @@ public class EmailService {
             logger.info("Sending camp notification email to: {}", dto.getEmail());
             mailSender.send(message);
             logger.info("Camp notification email successfully sent to: {}", dto.getEmail());
+            
+//            donorresponseRepository.insertEmailLog(dto.getEmail(), dto.getCampReqNo());
 
         } catch (MailException | MessagingException e) {
             logger.error("Error sending camp notification email to {}: {}", dto.getEmail(), e.getMessage(), e);
         }
     }
+    
+//    this is the email template for faq section user asking question....
+    public void sendUserQuestionToAdmin(String userEmail, String question) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailConfig.getUsername());
+        message.setSubject("New FAQ Question Submitted");
+        message.setText(
+            "User Email: " + userEmail + "\n\n" +
+            "Question:\n" + question + "\n\n" +
+            "Please reply to the user's email manually."
+        );
+
+        message.setReplyTo(userEmail);
+
+        mailSender.send(message);
+    }
+    
+ // Email template to notify user about available blood in their area...
+    public boolean sendBloodAvailabilityEmail(String toEmail, String hospitalCode, Integer stateCode) {
+        List<BloodAvailabilityDTO> list = bloodAvailabilityRepo.fetchBloodAvailability(
+                stateCode,
+                null,
+                null,
+                null,
+                Collections.singletonList(Integer.parseInt(hospitalCode))
+        );
+
+        if (list == null || list.isEmpty()) {
+            return false;
+        }
+
+        try {
+            BloodAvailabilityDTO dto = list.get(0);
+            StringBuilder sb = new StringBuilder();
+            sb.append("🩸 Blood Availability at ").append(dto.getHospitalname()).append("\n\n");
+            sb.append("🏥 Address: ").append(dto.getHospitaladd()).append("\n");
+            sb.append("📞 Contact: ").append(dto.getHospitalcontact()).append("\n");
+            sb.append("📅 Entry Date: ").append(dto.getEntrydate()).append("\n\n");
+
+//            Map<String, Map<String, String>> components = dto.getComponents();
+//            for (Map.Entry<String, Map<String, String>> entry : components.entrySet()) {
+//                sb.append("🧪 Component: ").append(entry.getKey()).append("\n");
+//                sb.append("✅ Available: ").append(entry.getValue().get("available_WithQty")).append("\n");
+//            }
+            
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(emailConfig.getUsername());
+
+            helper.setTo(toEmail);
+            message.setSubject("Blood Availability at " + dto.getHospitalname());
+            message.setText(sb.toString());
+
+            mailSender.send(message);
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("Email sending failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
 
 }

@@ -166,7 +166,7 @@ public class PortalLoginService {
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, width, height);
 
-		g2d.setFont(new Font("Roboto", Font.BOLD, 16));
+		g2d.setFont(new Font("Source Sans 3", Font.BOLD, 16));
 
 		g2d.setColor(new Color(109, 112, 120));
 

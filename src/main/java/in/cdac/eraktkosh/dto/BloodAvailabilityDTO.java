@@ -1,9 +1,12 @@
 package in.cdac.eraktkosh.dto;
 
+import java.util.Map;
+
 public class BloodAvailabilityDTO {
 
-	 private String bldgrpcode1;
+	 	private String bldgrpcode1;
 	    private String compId;
+	    private String componentName;
 	    private Integer count;
 	    private String hospitalname;
 	    private String hospitaladd;
@@ -14,6 +17,36 @@ public class BloodAvailabilityDTO {
 	    private String entrydate;
 	    private String offline;
 	    private String type;
+	    private String available_WithQty;  
+	    private Map<String, Map<String, String>> components;
+
+	    public String getComponentName() {
+	        return componentName;
+	    }
+
+	    public void setComponentName(String componentName) {
+	        this.componentName = componentName;
+	    }
+	    
+	    public Map<String, Map<String, String>> getComponents() {
+			return components;
+		}
+		public void setComponents(Map<String, Map<String, String>> components) {
+			this.components = components;
+		}
+		public String getAvailable_WithQty() {
+			return available_WithQty;
+		}
+		public void setAvailable_WithQty(String available_WithQty) {
+			this.available_WithQty = available_WithQty;
+		}
+		public String getNot_available_WithQty() {
+			return not_available_WithQty;
+		}
+		public void setNot_available_WithQty(String not_available_WithQty) {
+			this.not_available_WithQty = not_available_WithQty;
+		}
+		private String not_available_WithQty;
 	    
 		public String getBldgrpcode1() {
 			return bldgrpcode1;
