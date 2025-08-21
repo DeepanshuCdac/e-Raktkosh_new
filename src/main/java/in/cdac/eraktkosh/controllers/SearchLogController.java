@@ -18,21 +18,22 @@ public class SearchLogController {
 
 	private final SearchLogService searchLogService;
 
-    public SearchLogController(SearchLogService searchLogService) {
-        this.searchLogService = searchLogService;
-    }
+	public SearchLogController(SearchLogService searchLogService) {
+		this.searchLogService = searchLogService;
+	}
 
-    @PostMapping
-    public ResponseEntity<SearchLogResponseDTO> logSearch(@RequestBody SearchLogRequestDTO request, HttpServletRequest httpRequest) {
-        try {
-        	SearchLogResponseDTO response = searchLogService.logSearch(request, httpRequest);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-        	SearchLogResponseDTO errorResponse = new SearchLogResponseDTO();
-            errorResponse.setStatus("error");
-            errorResponse.setLogId(null);
-            errorResponse.setTimestamp(null);
-            return ResponseEntity.internalServerError().body(errorResponse);
-        }
-    }
+	@PostMapping
+	public ResponseEntity<SearchLogResponseDTO> logSearch(@RequestBody SearchLogRequestDTO request,
+			HttpServletRequest httpRequest) {
+		try {
+			SearchLogResponseDTO response = searchLogService.logSearch(request, httpRequest);
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			SearchLogResponseDTO errorResponse = new SearchLogResponseDTO();
+			errorResponse.setStatus("error");
+			errorResponse.setLogId(null);
+			errorResponse.setTimestamp(null);
+			return ResponseEntity.internalServerError().body(errorResponse);
+		}
+	}
 }

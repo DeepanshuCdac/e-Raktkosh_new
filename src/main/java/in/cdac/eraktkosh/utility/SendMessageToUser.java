@@ -42,9 +42,7 @@ public class SendMessageToUser {
 			public void run() {
 				try {
 					sendOTPThroughSMSGateway(sms_username, sms_password, sms_senderId, sms_url, contactNo, messageBody);
-					// logIntoDataBase("message : "+messageBody, BBPUBLICLogType.INFORMATION);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					System.out.println("error in thread");
 					e.printStackTrace();
 				}

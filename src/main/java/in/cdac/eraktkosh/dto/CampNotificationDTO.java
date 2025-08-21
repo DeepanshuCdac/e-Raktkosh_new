@@ -6,18 +6,18 @@ import java.time.format.DateTimeFormatter;
 public class CampNotificationDTO {
 
 	private String mobileNo;
-    private String email;
-    private String campReqNo;
-    private String campName;
-    private String campDate;
-    private String campTime;
-    private String venueName;
-    private String venueCity;
-    
-    public LocalDate getCampDateAsLocalDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-        return LocalDate.parse(campDate, formatter);
-    }
+	private String email;
+	private String campReqNo;
+	private String campName;
+	private String campDate;
+	private String campTime;
+	private String venueName;
+	private String venueCity;
+
+	public LocalDate getCampDateAsLocalDate() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+		return LocalDate.parse(campDate, formatter);
+	}
 
 	public String getMobileNo() {
 		return mobileNo;

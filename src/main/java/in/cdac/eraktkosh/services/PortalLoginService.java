@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.hazelcast.map.IMap;
 
 import in.cdac.eraktkosh.config.OTP_CONFIG;
+import in.cdac.eraktkosh.dto.UpdateDonorDTO;
 import in.cdac.eraktkosh.dto.UserWithTokenResponse;
 import in.cdac.eraktkosh.entity.PortalLoginEntity;
 import in.cdac.eraktkosh.provider.JwtTokenProvider;
@@ -305,14 +306,7 @@ public class PortalLoginService {
 	}
 
 //	update donor details in manage profile section....
-	public boolean updateOrInsertDonorDetails(PortalLoginEntity portalLoginEntity) throws Exception {
-		try {
-//        	System.out.println("bada sheer::"+portalLoginEntity.getEdonorFName());
-			portalDonorRepository.updateDonorDetails(portalLoginEntity);
-			return true;
-		} catch (Exception e) {
-			System.err.println("Error updating or inserting donor details: " + e.getMessage());
-			throw e;
-		}
+	public boolean updateDonor(UpdateDonorDTO donor) {
+		return portalDonorRepository.updateDonorDetails(donor) > 0;
 	}
 }

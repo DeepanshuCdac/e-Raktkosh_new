@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import in.cdac.eraktkosh.dto.UpdateDonorDTO;
 import in.cdac.eraktkosh.entity.PortalLoginEntity;
 import in.cdac.eraktkosh.repository.EraktkoshPortalLoginRepository;
 import in.cdac.eraktkosh.services.PortalLoginService;
@@ -160,22 +161,13 @@ public class PortalLoginController {
 	}
 
 //	7. endpoint for updating donor details in manage profile section...
-	@PostMapping("/updateOrInsertDonorDetails")
-	public ResponseEntity<?> updateOrInsertDonorDetails(@RequestBody PortalLoginEntity portalLoginEntity) {
-		try {
-
-			boolean isSuccess = portalLoginService.updateOrInsertDonorDetails(portalLoginEntity);
-
-			if (isSuccess) {
-				return ResponseEntity.ok("Donor details updated or inserted successfully.");
-			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-						.body("Failed to update or insert donor details.");
-			}
-		} catch (Exception e) {
-			// Handle exceptions and return an error response
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("An error occurred while processing the request: " + e.getMessage());
+	@PostMapping("/update")
+	public ResponseEntity<String> updateDonor(@RequestBody UpdateDonorDTO donor) {
+		boolean updated = portalLoginService.updateDonor(donor);
+		if (updated) {
+			return ResponseEntity.ok("Donor details updated successfully.");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No donor found with the provided mobile number.");
 		}
 	}
 }

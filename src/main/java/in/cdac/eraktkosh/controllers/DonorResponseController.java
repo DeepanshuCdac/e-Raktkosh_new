@@ -15,18 +15,17 @@ import in.cdac.eraktkosh.services.DonorResponseService;
 @RequestMapping("/api/response")
 public class DonorResponseController {
 
-    @Autowired
-    private DonorResponseService service;
+	@Autowired
+	private DonorResponseService service;
 
-    @PostMapping
-    public ResponseEntity<String> updateResponse(@RequestBody DonorResponseDTO dto) {
-        try {
-            service.handleDonorResponse(dto);
-            return ResponseEntity.ok("Response saved");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Error saving response");
-        }
-    }
+	@PostMapping
+	public ResponseEntity<String> updateResponse(@RequestBody DonorResponseDTO dto) {
+		try {
+			service.handleDonorResponse(dto);
+			return ResponseEntity.ok("Response saved");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving response");
+		}
+	}
 
 }

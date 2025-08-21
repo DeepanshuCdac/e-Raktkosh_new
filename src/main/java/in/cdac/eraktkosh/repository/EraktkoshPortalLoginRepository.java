@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import in.cdac.eraktkosh.dto.UpdateDonorDTO;
 import in.cdac.eraktkosh.entity.PortalLoginEntity;
 import in.cdac.eraktkosh.services.QueryLoader;
 
@@ -203,54 +204,15 @@ public class EraktkoshPortalLoginRepository {
 	}
 
 //	update donor details in manage profile section...
-	public void updateDonorDetails(PortalLoginEntity portalLoginEntity) {
-		String query = queryLoader.getQuery("query.INSERT.DONOR.DETAILS");
-		System.out.println("First Name: " + portalLoginEntity.getEdonorFName());
-		System.out.println("Last Name: " + portalLoginEntity.getEdonorLName());
-		System.out.println("dob: " + portalLoginEntity.getDob());
-		System.out.println("gender: " + portalLoginEntity.getGender());
-		System.out.println("Email: " + portalLoginEntity.getEdonorEmail());
-		System.out.println("bldgroup: " + portalLoginEntity.getBloodGroupName());
-		System.out.println("father: " + portalLoginEntity.getFatherName());
-		System.out.println("marriage: " + portalLoginEntity.getMaritalStatus());
-		System.out.println("Spouse: " + portalLoginEntity.getSpouce());
-		System.out.println("occupation: " + portalLoginEntity.getOccupation());
-		System.out.println("religion: " + portalLoginEntity.getReligion());
-		System.out.println("HNo: " + portalLoginEntity.getHno());
-		System.out.println("address: " + portalLoginEntity.getAddress());
-		System.out.println("Location: " + portalLoginEntity.getLocation());
-		System.out.println("city: " + portalLoginEntity.getEdonorCity());
-		System.out.println("district: " + portalLoginEntity.getEdonorDistName());
-		System.out.println("state: " + portalLoginEntity.getEdonorStateName());
-		System.out.println("PinCode: " + portalLoginEntity.getDonorPin());
-		System.out.println("Landmark: " + portalLoginEntity.getLandmark());
-		System.out.println("Donor ID: " + portalLoginEntity.getPortalDonorId());
-		System.out.println("Password: " + portalLoginEntity.getEdonorPass());
+	public int updateDonorDetails(UpdateDonorDTO donor) {
+		String query = queryLoader.getQuery("update.donor.details");
 
-		jdbcTemplate.update(query, ps -> {
-			ps.setString(1, portalLoginEntity.getEdonorFName());
-			ps.setString(2, portalLoginEntity.getEdonorLName());
-			ps.setString(3, portalLoginEntity.getDob());
-			ps.setString(4, portalLoginEntity.getGender());
-			ps.setString(5, portalLoginEntity.getEdonorEmail());
-			ps.setString(6, portalLoginEntity.getBloodGroupName());
-			ps.setString(7, portalLoginEntity.getFatherName());
-			ps.setString(8, portalLoginEntity.getMaritalStatus());
-			ps.setString(9, portalLoginEntity.getSpouce());
-			ps.setString(10, portalLoginEntity.getOccupation());
-			ps.setString(11, portalLoginEntity.getReligion());
-			ps.setString(12, portalLoginEntity.getHno());
-			ps.setString(13, portalLoginEntity.getAddress());
-			ps.setString(14, portalLoginEntity.getLocation());
-			ps.setString(15, portalLoginEntity.getEdonorCity());
-			ps.setString(16, portalLoginEntity.getEdonorDistName());
-			ps.setString(17, portalLoginEntity.getEdonorStateName());
-			ps.setString(18, portalLoginEntity.getDonorPin());
-			ps.setString(19, portalLoginEntity.getLandmark());
-			ps.setString(20, portalLoginEntity.getPortalDonorId());
-			ps.setString(21, portalLoginEntity.getEdonorPass());
-
-		});
+		return jdbcTemplate.update(query, donor.getFirstName(), donor.getLastName(), donor.getBloodGroupCode(),
+				donor.getStateCode(), donor.getDistrictCode(), donor.getPincode(), donor.getEmail(),
+				donor.getMaritalStatusCode(), donor.getSpouseName(), donor.getOccupationCode(), donor.getHouseNo(),
+				donor.getLandmark(), donor.getGenderCode(), donor.getReligionCode(), donor.getAddress(),
+				donor.getCityLocation(), donor.getCity(), donor.getFatherName(), donor.getDob(),
+				donor.getMobileNumber());
 	}
 
 	@SuppressWarnings("deprecation")

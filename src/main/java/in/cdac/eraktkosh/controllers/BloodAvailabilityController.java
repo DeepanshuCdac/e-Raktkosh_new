@@ -21,42 +21,35 @@ import in.cdac.eraktkosh.services.EmailService;
 @RequestMapping("/eraktkosh/blood-availability")
 public class BloodAvailabilityController {
 
-    @Autowired
-    private BloodAvailabilityService bloodAvailabilityService;
-    
-    @Autowired
-    private EmailService emailService;
+	@Autowired
+	private BloodAvailabilityService bloodAvailabilityService;
 
-    @GetMapping
-    public List<BloodAvailabilityDTO> fetchBloodAvailability(
-            @RequestParam Integer stateCode,
-            @RequestParam(required = false) Integer districtId,
-            @RequestParam(required = false) Integer componentId,
-            @RequestParam(required = false) Integer bloodGroupId,
-            @RequestParam(required = false) List<Integer> hospitalCodes) {
+	@Autowired
+	private EmailService emailService;
 
-        return bloodAvailabilityService.fetchBloodAvailability(
-                stateCode, districtId, componentId, bloodGroupId, hospitalCodes
-        );
-    }
-    
-    @PostMapping("/send")
-    public ResponseEntity<String> sendEmail(@RequestBody BloodAvailabilityEmailDTO request) {
-        try {
-            boolean sent = emailService.sendBloodAvailabilityEmail(
-                request.getEmail(),
-                request.getHospitalCode(),
-                request.getStateCode()
-            );
-            if (sent) {
-                return ResponseEntity.ok("Email sent successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found or email sending failed.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Internal error: " + e.getMessage());
-        }
-    }
+	@GetMapping
+	public List<BloodAvailabilityDTO> fetchBloodAvailability(@RequestParam Integer stateCode,
+			@RequestParam(required = false) Integer districtId, @RequestParam(required = false) Integer componentId,
+			@RequestParam(required = false) Integer bloodGroupId,
+			@RequestParam(required = false) List<Integer> hospitalCodes) {
+
+		return bloodAvailabilityService.fetchBloodAvailability(stateCode, districtId, componentId, bloodGroupId,
+				hospitalCodes);
+	}
+
+	@PostMapping("/send")
+	public ResponseEntity<String> sendEmail(@RequestBody BloodAvailabilityEmailDTO request) {
+		try {
+			boolean sent = emailService.sendBloodAvailabilityEmail(request.getEmail(), request.getHospitalCode(),
+					request.getStateCode());
+			if (sent) {
+				return ResponseEntity.ok("Email sent successfully!");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data found or email sending failed.");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal error: " + e.getMessage());
+		}
+	}
 
 }

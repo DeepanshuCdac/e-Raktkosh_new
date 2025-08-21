@@ -14,12 +14,12 @@ import in.cdac.eraktkosh.services.HospitalService;
 @RestController
 @RequestMapping("/eraktkosh/hospitals")
 public class HospitalController {
-	
+
 	@Autowired
 	private HospitalService hospitalService;
-	
-	 @GetMapping("/by-state-district")
-	    public List<HospitalDTO> getHospitals(@RequestParam int stateCode, @RequestParam int districtId) {
-	        return hospitalService.getHospitalsByStateAndDistrict(stateCode, districtId);
-	    }
+
+	@GetMapping("/by-state-district")
+	public List<HospitalDTO> getHospitals(@RequestParam int stateCode, @RequestParam int districtId) {
+		return hospitalService.getHospitalsByStateAndDistrict(stateCode, districtId);
+	}
 }

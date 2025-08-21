@@ -13,11 +13,4 @@ public class WebConfig implements WebMvcConfigurer {
 				.allowedHeaders("*"); // Allow all headers
 		// .allowCredentials(true); // Allow cookies/credentials
 	}
-
-	/*
-	 * @Override public void addInterceptors(InterceptorRegistry registry) {
-	 * registry.addInterceptor(new SessionInterceptor()).addPathPatterns("/beta/*");
-	 * }
-	 */
-
 }

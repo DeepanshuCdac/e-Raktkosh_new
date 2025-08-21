@@ -11,18 +11,13 @@ import in.cdac.eraktkosh.repository.BloodAvailabilityRepository;
 @Service
 public class BloodAvailabilityService {
 
-    @Autowired
-    private BloodAvailabilityRepository bloodAvailabilityRepository;
+	@Autowired
+	private BloodAvailabilityRepository bloodAvailabilityRepository;
 
-    public List<BloodAvailabilityDTO> fetchBloodAvailability(
-            Integer stateCode,
-            Integer districtId,
-            Integer componentId,
-            Integer bloodGroupId,
-            List<Integer> hospitalCodes) {
+	public List<BloodAvailabilityDTO> fetchBloodAvailability(Integer stateCode, Integer districtId, Integer componentId,
+			Integer bloodGroupId, List<Integer> hospitalCodes) {
 
-        return bloodAvailabilityRepository.fetchBloodAvailability(
-                stateCode, districtId, componentId, bloodGroupId, hospitalCodes
-        );
-    }
+		return bloodAvailabilityRepository.fetchBloodAvailability(stateCode, districtId, componentId, bloodGroupId,
+				hospitalCodes);
+	}
 }

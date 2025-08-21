@@ -4,9 +4,9 @@ public class SubscribeDonorDTO {
 
 	private Integer uniqueKey;
 	private Integer stateCode;
-    private Integer districtCode;
-    private Long mobileNo;
-    private String email; 
+	private Integer districtCode;
+	private Long mobileNo;
+	private String email;
 
 	public Integer getUniqueKey() {
 		return uniqueKey;
@@ -16,23 +16,23 @@ public class SubscribeDonorDTO {
 		this.uniqueKey = uniqueKey;
 	}
 
-    public Integer getStateCode() {
-        return stateCode;
-    }
+	public Integer getStateCode() {
+		return stateCode;
+	}
 
-    public void setStateCode(Integer stateCode) {
-        this.stateCode = stateCode;
-    }
+	public void setStateCode(Integer stateCode) {
+		this.stateCode = stateCode;
+	}
 
-    public Integer getDistrictCode() {
-        return districtCode;
-    }
+	public Integer getDistrictCode() {
+		return districtCode;
+	}
 
-    public void setDistrictCode(Integer districtCode) {
-        this.districtCode = districtCode;
-    }
-    
-    public Long getMobileNo() {
+	public void setDistrictCode(Integer districtCode) {
+		this.districtCode = districtCode;
+	}
+
+	public Long getMobileNo() {
 		return mobileNo;
 	}
 
@@ -40,11 +40,11 @@ public class SubscribeDonorDTO {
 		this.mobileNo = mobileNo;
 	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

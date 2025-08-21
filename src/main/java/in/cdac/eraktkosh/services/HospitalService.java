@@ -10,12 +10,12 @@ import in.cdac.eraktkosh.repository.HospitalRepository;
 
 @Service
 public class HospitalService {
-	
-	@Autowired
-    private HospitalRepository hospitalRepository;
 
-    public List<HospitalDTO> getHospitalsByStateAndDistrict(int stateCode, int districtId) {
-        return hospitalRepository.findByStateAndDistrict(stateCode, districtId);
-    }
+	@Autowired
+	private HospitalRepository hospitalRepository;
+
+	public List<HospitalDTO> getHospitalsByStateAndDistrict(int stateCode, int districtId) {
+		return hospitalRepository.findByStateAndDistrict(stateCode, districtId);
+	}
 
 }

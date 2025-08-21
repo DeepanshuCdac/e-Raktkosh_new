@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "./static/css/main.6a7cd2d8.css",
+    "main.js": "./static/js/main.97e802ee.js",
+    "static/media/donation-wg-bg.png": "./static/media/donation-wg-bg.88550ec97e3e88bbda3e.png",
+    "static/media/about-bg.png": "./static/media/about-bg.f87ff418b22ae577122e.png",
+    "static/media/login_bg.jpg": "./static/media/login_bg.8a423e29ed64df5dba8a.jpg",
+    "static/media/SourceSans3-Regular.ttf": "./static/media/SourceSans3-Regular.d5f259bc2699f6304f9a.ttf",
+    "static/media/SourceSans3-SemiBold.ttf": "./static/media/SourceSans3-SemiBold.d40d72085d560e4061c3.ttf",
+    "static/media/SourceSans3-Bold.ttf": "./static/media/SourceSans3-Bold.82c3c9bec7b83d9d5846.ttf",
+    "static/media/SourceSans3-Medium.ttf": "./static/media/SourceSans3-Medium.be9ce6ac3e64725356ae.ttf",
+    "static/media/SourceSans3-Light.ttf": "./static/media/SourceSans3-Light.ce7a0eaafe8f8174fea3.ttf",
+    "static/media/bg-about-res.png": "./static/media/bg-about-res.d0ff234ccea9c08d89b4.png",
+    "static/media/PlayfairDisplay-MediumItalic.ttf": "./static/media/PlayfairDisplay-MediumItalic.8a8a4356b4d001468b59.ttf",
+    "static/media/campHeader.svg": "./static/media/campHeader.be455cf028d9c2ac0b84.svg",
+    "static/media/learn-bg.png": "./static/media/learn-bg.6d3d4f70c20443e41b08.png",
+    "static/media/Background.jpg": "./static/media/Background.0d4d6f5402292d68338d.jpg",
+    "index.html": "./index.html",
+    "static/media/calendar.svg": "./static/media/calendar.721af743b1e45a36369b.svg",
+    "main.6a7cd2d8.css.map": "./static/css/main.6a7cd2d8.css.map",
+    "main.97e802ee.js.map": "./static/js/main.97e802ee.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6a7cd2d8.css",
+    "static/js/main.97e802ee.js"
+  ]
+}

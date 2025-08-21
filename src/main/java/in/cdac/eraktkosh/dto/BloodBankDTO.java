@@ -1,33 +1,33 @@
 package in.cdac.eraktkosh.dto;
 
 public class BloodBankDTO {
-	
-	 	private int hospitalCode;
-	    private String hospitalName;
-	    private String mobileNo;
 
-	    public int getHospitalCode() {
-	        return hospitalCode;
-	    }
+	private int hospitalCode;
+	private String hospitalName;
+	private String mobileNo;
 
-	    public void setHospitalCode(int hospitalCode) {
-	        this.hospitalCode = hospitalCode;
-	    }
+	public int getHospitalCode() {
+		return hospitalCode;
+	}
 
-	    public String getHospitalName() {
-	        return hospitalName;
-	    }
+	public void setHospitalCode(int hospitalCode) {
+		this.hospitalCode = hospitalCode;
+	}
 
-	    public void setHospitalName(String hospitalName) {
-	        this.hospitalName = hospitalName;
-	    }
+	public String getHospitalName() {
+		return hospitalName;
+	}
 
-	    public String getMobileNo() {
-	        return mobileNo;
-	    }
+	public void setHospitalName(String hospitalName) {
+		this.hospitalName = hospitalName;
+	}
 
-	    public void setMobileNo(String mobileNo) {
-	        this.mobileNo = mobileNo;
-	    }
+	public String getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
 
 }

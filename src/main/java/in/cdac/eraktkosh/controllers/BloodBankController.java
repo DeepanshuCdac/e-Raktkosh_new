@@ -14,17 +14,15 @@ import in.cdac.eraktkosh.services.BloodBankService;
 @RestController
 @RequestMapping("/eraktkosh/bloodbanks")
 public class BloodBankController {
-	
-	 @Autowired
-	    private BloodBankService service;
 
-	 @GetMapping
-	 public List<BloodBankDTO> getBloodBanks(
-	         @RequestParam("stateCode") int stateCode,
-	         @RequestParam(value = "districtCode", required = false) Integer districtCode) {
-	     
-	     return service.getBloodBanksByStateAndDistrict(stateCode, districtCode != null ? districtCode : 0);
-	 }
+	@Autowired
+	private BloodBankService service;
 
+	@GetMapping
+	public List<BloodBankDTO> getBloodBanks(@RequestParam("stateCode") int stateCode,
+			@RequestParam(value = "districtCode", required = false) Integer districtCode) {
+
+		return service.getBloodBanksByStateAndDistrict(stateCode, districtCode != null ? districtCode : 0);
+	}
 
 }

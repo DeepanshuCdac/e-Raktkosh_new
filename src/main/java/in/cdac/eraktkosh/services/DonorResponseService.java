@@ -8,11 +8,11 @@ import in.cdac.eraktkosh.repository.DonorResponseRepository;
 
 @Service
 public class DonorResponseService {
-	
+
 	@Autowired
-    private DonorResponseRepository repository;
+	private DonorResponseRepository repository;
 
 	public void handleDonorResponse(DonorResponseDTO dto) {
-	    repository.updateResponse(dto.getEmail(), dto.getCampReqNo(), dto.getIsResponse());
+		repository.updateResponse(dto.getEmail(), dto.getCampReqNo(), dto.getIsResponse());
 	}
 }

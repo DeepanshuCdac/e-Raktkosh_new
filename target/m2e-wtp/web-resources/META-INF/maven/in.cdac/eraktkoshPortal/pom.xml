@@ -54,11 +54,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
     <version>2.10.1</version>
 </dependency>
 
-        <!-- dependency added for jpa using for third party api call-->
-<!--          <dependency>-->
-<!--        <groupId>org.springframework.boot</groupId>-->
-<!--        <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--    </dependency>-->
+<dependency>
+    <groupId>com.google.analytics</groupId>
+    <artifactId>google-analytics-data</artifactId>
+    <version>0.42.0</version>
+</dependency>
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
@@ -105,6 +106,17 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 <!--ends-->
+
+<!--		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>2.0.2</version>
+		</dependency>-->
+		
+		<dependency>
+    		<groupId>javax.validation</groupId>
+    		<artifactId>validation-api</artifactId>
+		</dependency>
     </dependencies>
     <build>
         <finalName>eraktkoshPortal</finalName>

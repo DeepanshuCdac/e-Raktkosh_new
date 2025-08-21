@@ -70,8 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 * .antMatchers("/login", "/register").permitAll()
 				 */
 
-				.antMatchers("/eraktkosh/fetchDonorDetails", "/eraktkosh/fetchCertificateDetails",
-						"/eraktkosh/updateOrInsertDonorDetails", "/auth/welcome")
+				.antMatchers("/eraktkosh/fetchDonorDetails", "/eraktkosh/fetchCertificateDetails", "/eraktkosh/update",
+						"/auth/welcome")
 				.authenticated().antMatchers("/**", "/auth/login").permitAll().anyRequest().authenticated())
 				.formLogin(login -> login.disable()) // Disable Spring Security default form login
 				.httpBasic(basic -> basic.disable()) // Disable HTTP Basic Authentication

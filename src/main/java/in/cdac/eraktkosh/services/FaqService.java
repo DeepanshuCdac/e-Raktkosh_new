@@ -10,12 +10,12 @@ import in.cdac.eraktkosh.repository.FaqRepository;
 
 @Service
 public class FaqService {
-	
+
 	@Autowired
 	private FaqRepository faqRepo;
-	
-	 public List<FaqDTO> getFaqList() {
-	        return faqRepo.getAllFaqs();
-	    }
+
+	public List<FaqDTO> getFaqList() {
+		return faqRepo.getAllFaqs();
+	}
 
 }

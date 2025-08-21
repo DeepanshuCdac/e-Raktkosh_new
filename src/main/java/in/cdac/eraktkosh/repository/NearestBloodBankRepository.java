@@ -2,7 +2,6 @@ package in.cdac.eraktkosh.repository;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,10 +36,10 @@ public class NearestBloodBankRepository {
 		return hospital;
 	};
 
-    NearestBloodBankRepository(JdbcTemplate jdbcTemplate, QueryLoader queryLoader) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.queryLoader = queryLoader;
-    }
+	NearestBloodBankRepository(JdbcTemplate jdbcTemplate, QueryLoader queryLoader) {
+		this.jdbcTemplate = jdbcTemplate;
+		this.queryLoader = queryLoader;
+	}
 
 	public List<NearestBloodBank> findNearestHospitals(int stateCode, int districtCode) {
 		String sql = queryLoader.getQuery("fetch.nearest_blood_bank");
